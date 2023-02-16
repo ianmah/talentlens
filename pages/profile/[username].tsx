@@ -9,10 +9,12 @@ const Profile: NextPage = () => {
   const router = useRouter()
   const { username } = router.query
 
+  const title = `${username} ✦ Talentlens`
+
   return (
     <Container>
       <Head>
-        <title>{username} ✦ Talentlens</title>
+        <title>{title}</title>
         <meta
           name="description"
           content="Talent Protocol x Lens social app"

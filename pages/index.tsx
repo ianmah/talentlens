@@ -103,6 +103,7 @@ const Home: NextPage = () => {
   const [isDefinitelyConnected, setIsDefinitelyConnected] = useState(false)
   const [getProfiles, { loading, error, data }] = useLazyQuery(GET_PROFILES)
   const { address, isConnected } = useAccount()
+  const [profile, setProfile] = useState<any>({})
 
   useEffect(() => {
       if (isConnected) {
@@ -117,6 +118,15 @@ const Home: NextPage = () => {
         isConnected,
         getProfiles
       ]);
+
+  useEffect(() => {
+    if (!data?.profiles.items.length) {
+      return
+    }
+    
+    setProfile(data.profiles.items[0])
+
+  }, [data?.profiles.items])
   
   return (
     <Container>
@@ -135,8 +145,8 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to Talent Lens
         </h1>
-        {isDefinitelyConnected && <a href="/profile/asdasd">View your profile, {address}</a>}
-        {data && JSON.stringify(data.profiles.items[0])}
+        {isDefinitelyConnected && <a href={`/profile/${profile.handle}`}>View your profile, {address}</a>}
+        {data && JSON.stringify(profile)}
       </main>
 
       <Footer/>
