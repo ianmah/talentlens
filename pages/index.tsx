@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Container from '../components/Container'
+import Footer from '../components/Footer'
 
 const Home: NextPage = () => {
   return (
@@ -23,12 +24,7 @@ const Home: NextPage = () => {
           Welcome to Talent Lens
         </h1>
       </main>
-
-      <footer className={styles.footer}>
-        <a href="https://twitter.com/irislabsxyz" target="_blank" rel="noopener noreferrer">
-          Made with ❤️ by your frens at Iris Labs
-        </a>
-      </footer>
+      <Footer/>
     </Container>
   );
 };

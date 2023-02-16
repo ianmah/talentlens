@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Container from '../../components/Container'
+import Footer from '../../components/Footer'
 
 const Profile: NextPage = () => {
   const router = useRouter()
@@ -27,11 +28,7 @@ const Profile: NextPage = () => {
         </h1>
       </main>
 
-      <footer>
-        <a href="https://twitter.com/irislabsxyz" target="_blank" rel="noopener noreferrer">
-          Made with ❤️ by your frens at Iris Labs
-        </a>
-      </footer>
+      <Footer/>
     </Container>
   );
 };
