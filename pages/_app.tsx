@@ -25,13 +25,15 @@ const { connectors } = getDefaultWallets({
 });
 
 const wagmiClient = createClient({
-  autoConnect: false,
+  autoConnect: true,
   connectors,
   provider,
   webSocketProvider,
 });
 
+
 function MyApp({ Component, pageProps }: AppProps) {
+  
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
