@@ -1,14 +1,17 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import Container from '../components/Container'
+import Container from '../../components/Container'
 
-const Home: NextPage = () => {
+const Profile: NextPage = () => {
+  const router = useRouter()
+  const { username } = router.query
+
   return (
     <Container>
       <Head>
-        <title>Talent Lens</title>
+        <title>{username} ✦ Talentlens</title>
         <meta
           name="description"
           content="Talent Protocol x Lens social app"
@@ -16,15 +19,15 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         <ConnectButton />
 
-        <h1 className={styles.title}>
-          Welcome to Talent Lens
+        <h1>
+          {username}
         </h1>
       </main>
 
-      <footer className={styles.footer}>
+      <footer>
         <a href="https://twitter.com/irislabsxyz" target="_blank" rel="noopener noreferrer">
           Made with ❤️ by your frens at Iris Labs
         </a>
@@ -33,4 +36,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Profile;
