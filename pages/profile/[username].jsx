@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
+import Button from '../../components/Button'
+import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
 
 // TODO: Move to query file
@@ -104,7 +106,6 @@ const Profile = ({}) => {
   const router = useRouter()
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
-  const [lensProfile, setLensProfile] = useState({})
   const [getProfiles, { loading, error, data }] = useLazyQuery(GET_PROFILES, {
     variables: {
       request: {
@@ -113,6 +114,10 @@ const Profile = ({}) => {
       },
     }
   })
+
+  // console.log(talentProfile)
+
+  const lensProfile = data && data.profiles.items[0] || {}
 
   useEffect(() => {
     if (!username) return;
@@ -158,11 +163,13 @@ const Profile = ({}) => {
 
       <main>
         <ConnectButton />
+        <ProfileImg src={talentProfile.profile_picture_url}/>
 
         <h1>
-          {username} {talentProfile.name}
+          {talentProfile.name}
         </h1>
-        <p>{data && JSON.stringify(data)}</p>
+        <Button>{username}</Button>
+        <Button>{lensProfile.handle}</Button>
       </main>
 
       <Footer />
