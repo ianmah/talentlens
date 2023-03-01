@@ -7,6 +7,7 @@ import { polygon } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import ThemeProvider from '../styles/ThemeProvider'
 
 const client = new ApolloClient({
   uri: 'https://api.lens.dev/',
@@ -39,14 +40,16 @@ const wagmiClient = createClient({
 
 
 function MyApp({ Component, pageProps }: AppProps) {
-  
+
   return (
     <WagmiConfig client={wagmiClient}>
-      <ApolloProvider client={client}>
-        <RainbowKitProvider chains={chains}>
-          <Component {...pageProps} />
-        </RainbowKitProvider>
-      </ApolloProvider>
+      <ThemeProvider>
+        <ApolloProvider client={client}>
+          <RainbowKitProvider chains={chains}>
+            <Component {...pageProps} />
+          </RainbowKitProvider>
+        </ApolloProvider>
+      </ThemeProvider>
     </WagmiConfig>
   );
 }

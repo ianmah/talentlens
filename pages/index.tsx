@@ -106,28 +106,28 @@ const Home: NextPage = () => {
   const [profile, setProfile] = useState<any>({})
 
   useEffect(() => {
-      if (isConnected) {
-        setIsDefinitelyConnected(true);
-        getProfiles();
-      } else {
-        setIsDefinitelyConnected(false);
-      }
-    }, [
-        address,
-        setIsDefinitelyConnected,
-        isConnected,
-        getProfiles
-      ]);
+    if (isConnected) {
+      setIsDefinitelyConnected(true);
+      getProfiles();
+    } else {
+      setIsDefinitelyConnected(false);
+    }
+  }, [
+    address,
+    setIsDefinitelyConnected,
+    isConnected,
+    getProfiles
+  ]);
 
   useEffect(() => {
     if (!data?.profiles.items.length) {
       return
     }
-    
+
     setProfile(data.profiles.items[0])
 
   }, [data?.profiles.items])
-  
+
   return (
     <Container>
       <Head>
@@ -146,10 +146,10 @@ const Home: NextPage = () => {
           Welcome to Talent Lens
         </h1>
         {isDefinitelyConnected && <a href={`/profile/${profile.handle}`}>View your profile, {address}</a>}
-        {data && JSON.stringify(profile)}
+        <p>{data && JSON.stringify(profile)}</p>
       </main>
 
-      <Footer/>
+      <Footer />
     </Container>
   );
 };

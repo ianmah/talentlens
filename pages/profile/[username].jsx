@@ -1,11 +1,22 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import type { NextPage } from 'next'
+import axios from 'axios'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
+import { API_URL } from '../../util/api'
 
-const Profile: NextPage = () => {
+export async function getServerSideProps() {
+  const res = await axios.get(API_URL + "/api/user", {
+  })
+  
+  return {
+    props: {}, // will be passed to the page component as props
+  }
+}
+
+const Profile = () => {
   const router = useRouter()
   const { username } = router.query
 
@@ -30,7 +41,7 @@ const Profile: NextPage = () => {
         </h1>
       </main>
 
-      <Footer/>
+      <Footer />
     </Container>
   );
 };
