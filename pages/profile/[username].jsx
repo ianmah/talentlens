@@ -6,8 +6,8 @@ import Container from '../../components/Container'
 import Footer from '../../components/Footer'
 import { API_URL } from '../../util/api'
 
-export async function getServerSideProps() {
-  const res = await axios.get(API_URL + "/api/user", {})
+export async function getServerSideProps(context) {
+  const res = await axios.get(`${API_URL}/api/talent/${context.query.username}`, {})
 
   const {
     name,
