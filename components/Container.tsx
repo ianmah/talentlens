@@ -5,6 +5,6 @@ export default style.div`
   max-width: 400px;
   margin: 0 auto;
   display: block;
-  background: rgba(0, 0, 0, 0.15);
+  background: ${p => p.theme.bg};
   min-height: 100vh;
 `

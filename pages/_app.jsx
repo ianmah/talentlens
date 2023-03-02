@@ -4,7 +4,6 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { polygon } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
-import type { AppProps } from 'next/app'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 
 import ThemeProvider from '../styles/ThemeProvider'
@@ -15,7 +14,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }) {
   const [wagmiClient, setWagmiClient] = useState()
   const [chains, setChains] = useState()
 
@@ -31,12 +30,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         publicProvider(),
       ]
     );
-    
+
     const { connectors } = getDefaultWallets({
       appName: 'Talent Lens',
       chains,
     });
-    
+
     const wagmiClient = createClient({
       autoConnect: true,
       connectors,
@@ -54,19 +53,19 @@ function MyApp({ Component, pageProps }: AppProps) {
       <GlobalStyles />
       {
         wagmiClient
-        ? <>
-        <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
-        <ApolloProvider client={client}>
-        <ThemeProvider>
-          <GlobalStyles />
-          <Component {...pageProps} />
-        </ThemeProvider>
-        </ApolloProvider>
-        </RainbowKitProvider>
-        </WagmiConfig>
-        </>
-        : <p>loading</p> 
+          ? <>
+            <WagmiConfig client={wagmiClient}>
+              <RainbowKitProvider chains={chains}>
+                <ApolloProvider client={client}>
+                  <ThemeProvider>
+                    <GlobalStyles />
+                    <Component {...pageProps} />
+                  </ThemeProvider>
+                </ApolloProvider>
+              </RainbowKitProvider>
+            </WagmiConfig>
+          </>
+          : <p>loading</p>
       }
     </ThemeProvider>
   );

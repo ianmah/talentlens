@@ -20,7 +20,7 @@ const GlobalStyles = createGlobalStyle`
 
 html,
 body {
-  background: #131415;
+  background: #101113;
   padding: 0;
   margin: 0;
   font-family: Acid Grotesk TP, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, sans-serif;
