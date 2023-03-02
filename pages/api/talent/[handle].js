@@ -14,7 +14,9 @@ export default async function handler(req, res) {
           'X-API-KEY': process.env.TALENT_API_KEY
         }
       })
+
     res.setHeader('Cache-Control', 'no-store')
+    res.setHeader('Cache-Control', 'no-cache')
     return res.status(200).json(talentreq.data)
   } catch (e) {
     return res.status(404).json({ message: "Not found" })
