@@ -121,7 +121,7 @@ const ButtonGroup = style.div`
   gap: 6px;
 `
 
-const Bio = style.div`
+const Headline = style.div`
   font-size: 1.4em;
   margin-bottom: 1em;
 `
@@ -182,7 +182,7 @@ const Profile = ({ }) => {
         following_count,
         profile_picture_url,
         wallet_address,
-        bio
+        headline
       } = res.data.talent
 
       setTalentProfile({
@@ -191,7 +191,7 @@ const Profile = ({ }) => {
         following_count,
         profile_picture_url,
         wallet_address,
-        bio: bio || 'This is a hardcoded bio until one is added to API'
+        headline: headline || 'This is a hardcoded bio until one is added to API'
       })
     }
     getData()
@@ -232,7 +232,7 @@ const Profile = ({ }) => {
           </div>
         </Header>
 
-        <Bio>--E {talentProfile.bio}</Bio>
+        <Headline>--E {talentProfile.headline}</Headline>
 
         <Stats>
           <H3>On Talent Protocol</H3>
