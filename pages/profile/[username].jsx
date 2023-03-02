@@ -4,6 +4,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import style from 'styled-components'
+
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
 import Button from '../../components/Button'
@@ -102,6 +104,32 @@ query($request: ProfileQueryRequest!) {
   }
 }`
 
+const Bio = style.div`
+  font-size: 1.4em;
+`
+
+const Stats = style.div`
+  margin: 12px 0;
+`
+
+const H3 = style.h3`
+  color: ${p => p.theme.color.primary04};
+  font-weight: 400;
+  font-size: 12px;
+  margin: 3px 0;
+`
+
+const Stat = style.p`
+  color: ${p => p.theme.color.primary04};
+  font-weight: 400;
+  font-size: 12px;
+  display: inline-block;
+  margin: 0 12px 8px 0;
+  b {
+    color: ${p => p.theme.text};
+  }
+`
+
 const Profile = ({}) => {
   const router = useRouter()
   const { username } = router.query
@@ -128,7 +156,8 @@ const Profile = ({}) => {
         followers_count,
         following_count,
         profile_picture_url,
-        wallet_address
+        wallet_address,
+        bio
       } = res.data.talent
   
       setTalentProfile({
@@ -136,11 +165,14 @@ const Profile = ({}) => {
         followers_count,
         following_count,
         profile_picture_url,
-        wallet_address
+        wallet_address,
+        bio: bio || 'This is a hardcoded bio until one is added to API'
       })
     }
     getData()
   }, [setTalentProfile, getProfiles, username])
+
+  console.log(lensProfile)
 
   useEffect(() => {
     if (talentProfile.wallet_address) {
@@ -164,12 +196,23 @@ const Profile = ({}) => {
       <main>
         <ConnectButton />
         <ProfileImg src={talentProfile.profile_picture_url}/>
-
         <h1>
           {talentProfile.name}
         </h1>
         <Button>{username}</Button>
         <Button>{lensProfile.handle}</Button>
+        <Bio>{talentProfile.bio}</Bio>
+
+        <Stats>
+          <H3>On Talent Protocol</H3>
+          <Stat><b>{talentProfile.followers_count}</b> Followers</Stat>
+          <Stat><b>{talentProfile.following_count}</b> Following</Stat>
+          {lensProfile.stats && <>
+            <H3>On Lens Protocol</H3>
+            <Stat><b>{lensProfile.stats.totalFollowers}</b> Followers</Stat>
+            <Stat><b>{lensProfile.stats.totalFollowing}</b> Following</Stat>
+          </>}
+        </Stats>
       </main>
 
       <Footer />

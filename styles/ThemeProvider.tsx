@@ -5,9 +5,20 @@ type Props = {
   children: React.ReactNode
 }
 
+const PRIMITIVES = {
+  primary01: '#FFFFFF',
+  primary02: '#CCCED1',
+  primary03: '#AAADB3',
+  primary04: '#71767B',
+  surface01: '#1C1D1F', 
+  surface02: '#232427',
+  primary: '#BBED55',
+}
+
 const theme = {
-  primary: '#ABFE2C',
-  text: '#fff',
+  color: PRIMITIVES,
+  primary: PRIMITIVES.primary,
+  text: PRIMITIVES.primary01,
   background: '#131415',
 }
 
