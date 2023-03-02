@@ -145,6 +145,7 @@ const Stat = style.p`
   b {
     color: ${p => p.theme.text};
   }
+  
 `
 
 const Profile = ({}) => {
@@ -187,8 +188,6 @@ const Profile = ({}) => {
     getData()
   }, [setTalentProfile, getProfiles, username])
 
-  console.log(lensProfile)
-
   useEffect(() => {
     if (talentProfile.wallet_address) {
       getProfiles()
@@ -228,12 +227,36 @@ const Profile = ({}) => {
 
         <Stats>
           <H3>On Talent Protocol</H3>
-          <Stat><b>{talentProfile.followers_count}</b> Followers</Stat>
-          <Stat><b>{talentProfile.following_count}</b> Following</Stat>
+          <Stat
+            onClick={() => {
+              router.push(`/profile/${username}/?followers=talent`, undefined, { shallow: true })
+            }}
+          >
+            <b>{talentProfile.followers_count}</b> Followers
+          </Stat>
+          <Stat
+            onClick={() => {
+              router.push(`/profile/${username}/?following=talent`, undefined, { shallow: true })
+            }}
+          >
+            <b>{talentProfile.following_count}</b> Following
+          </Stat>
           {lensProfile.stats && <>
             <H3>On Lens Protocol</H3>
-            <Stat><b>{lensProfile.stats.totalFollowers}</b> Followers</Stat>
-            <Stat><b>{lensProfile.stats.totalFollowing}</b> Following</Stat>
+            <Stat
+              onClick={() => {
+                router.push(`/profile/${username}/?followers=lens`, undefined, { shallow: true })
+              }}
+            >
+              <b>{lensProfile.stats.totalFollowers}</b> Followers
+            </Stat>
+            <Stat
+              onClick={() => {
+                router.push(`/profile/${username}/?following=lens`, undefined, { shallow: true })
+              }}
+            >
+              <b>{lensProfile.stats.totalFollowing}</b> Following
+            </Stat>
           </>}
         </Stats>
       </main>
