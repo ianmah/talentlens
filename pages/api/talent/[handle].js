@@ -3,7 +3,7 @@ const axios = require('axios');
 const TALENT_API = 'https://api.talentprotocol.com/api/v1'
 
 export default async function handler(req, res) {
-  if (req.method === "POST" || !req.query || !req.query.handle) {
+  if (!req.query || !req.query.handle) {
     return res.status(400).json({ message: "Bad request" })
   }
   const handle = req.query.handle
