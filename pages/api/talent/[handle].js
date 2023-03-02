@@ -4,7 +4,8 @@ const TALENT_API = 'https://api.talentprotocol.com/api/v1'
 
 export default async function handler(req, res) {
   if (!req.query || !req.query.handle) {
-    return res.status(400).json({ message: "Bad request" })
+    console.log('returning 400')
+    // return res.status(400).json({ message: "Bad request" })
   }
   const handle = req.query.handle
   try {
