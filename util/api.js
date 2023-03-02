@@ -1,1 +1,1 @@
-export const API_URL = 'https://talentlens.ianmah.repl.co'
+export const API_URL = process.env.NODE_ENV === 'production' ? 'https://talentlens.vercel.app' : 'https://talentlens.ianmah.repl.co';
