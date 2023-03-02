@@ -4,6 +4,7 @@ const StyledFooter = style.footer`
     display: flex;
     flex: 1;
     padding: 2rem 0;
+    margin-top: 2rem;
     border-top: 1px solid ${p => p.theme.color.primary04};
     justify-content: center;
     align-items: center;

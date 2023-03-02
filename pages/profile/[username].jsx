@@ -270,8 +270,14 @@ const Profile = ({ }) => {
           </>}
         </Stats>
 
-        {router.query.followers || router.query.following}
-        <FollowList />
+        {(router.query.followers || router.query.following) && 
+          <FollowList
+            type={router.query.followers
+              ? `followers-${router.query.followers}`
+              : `following-${router.query.following}`
+            }
+          />
+        }
       </main>
 
       <Footer />
