@@ -72,9 +72,9 @@ const Home = () => {
           Welcome to Talent Lens
         </h1>
 
-        {talentProfile.username ? <a href={`/profile/${talentProfile.username}`}>View your profile, {address}</a> : <>
-          <p>You don&apos;t seem to have a Talent profile.</p>
-        </>}
+        {talentProfile.username && <a href={`/profile/${talentProfile.username}`}>View your profile, {address}</a>}
+        {isDefinitelyConnected && !talentProfile && <p>You don&apos;t seem to have a Talent profile.</p>}
+
       </main>
 
       <Footer />
