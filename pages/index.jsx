@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import axios from 'axios'
 import { useAccount } from 'wagmi'
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import { API_URL } from '../util/api'
 import Container from '../components/Container'
 import Footer from '../components/Footer'
 
-const Home: NextPage = () => {
+const Home = () => {
   const [isDefinitelyConnected, setIsDefinitelyConnected] = useState(false)
   const { address, isConnected } = useAccount()
   const [talentProfile, setTalentProfile] = useState({})
@@ -26,7 +25,7 @@ const Home: NextPage = () => {
           wallet_address,
           headline
         } = res.data.talent
-  
+
         setTalentProfile({
           name,
           followers_count,
@@ -67,14 +66,14 @@ const Home: NextPage = () => {
 
       <main>
         {!isDefinitelyConnected && <ConnectButton />}
-        <br/>
-        <br/>
+        <br />
+        <br />
         <h1>
           Welcome to Talent Lens
         </h1>
-        
+
         {talentProfile.username ? <a href={`/profile/${talentProfile.username}`}>View your profile, {address}</a> : <>
-        <p>You don\'t seem to have a Talent profile.</p>
+          <p>You don&apos;t seem to have a Talent profile.</p>
         </>}
       </main>
 
