@@ -195,7 +195,7 @@ const Profile = ({ }) => {
       })
     }
     getData()
-  }, [setTalentProfile, getProfiles, username])
+  }, [setTalentProfile, username])
 
   useEffect(() => {
     if (talentProfile.wallet_address) {
