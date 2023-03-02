@@ -9,6 +9,7 @@ import style from 'styled-components'
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
 import Button from '../../components/Button'
+import FollowList from '../../components/FollowList'
 import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
 
@@ -142,21 +143,29 @@ const Stat = style.p`
   font-size: 14px;
   display: inline-block;
   margin: 0 16px 12px 0;
+  text-decoration: underline rgba(255, 255, 255, 0);
+  transition: text-decoration-color 200ms;
+  text-underline-offset: 4px;
+  
+  &:hover {
+    text-decoration: underline rgba(255, 255, 255, 1);
+    cursor: pointer;
+  }
+  
   b {
     color: ${p => p.theme.text};
   }
-  
 `
 
-const Profile = ({}) => {
+const Profile = ({ }) => {
   const router = useRouter()
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
   const [getProfiles, { loading, error, data }] = useLazyQuery(GET_PROFILES, {
     variables: {
       request: {
-          ownedBy: [talentProfile.wallet_address],
-          limit: 1,
+        ownedBy: [talentProfile.wallet_address],
+        limit: 1,
       },
     }
   })
@@ -175,7 +184,7 @@ const Profile = ({}) => {
         wallet_address,
         bio
       } = res.data.talent
-  
+
       setTalentProfile({
         name,
         followers_count,
@@ -211,7 +220,7 @@ const Profile = ({}) => {
         <ConnectButton />
 
         <Header>
-          <ProfileImg src={talentProfile.profile_picture_url}/>
+          <ProfileImg src={talentProfile.profile_picture_url} />
           <div>
             <H1>
               {talentProfile.name}
@@ -222,7 +231,7 @@ const Profile = ({}) => {
             </ButtonGroup>
           </div>
         </Header>
-        
+
         <Bio>--E {talentProfile.bio}</Bio>
 
         <Stats>
@@ -259,6 +268,9 @@ const Profile = ({}) => {
             </Stat>
           </>}
         </Stats>
+
+        {router.query.followers || router.query.following}
+        <FollowList />
       </main>
 
       <Footer />
