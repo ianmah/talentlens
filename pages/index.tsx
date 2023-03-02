@@ -4,7 +4,6 @@ import { useAccount } from 'wagmi'
 import { useLazyQuery, gql } from '@apollo/client'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import Container from '../components/Container'
 import Footer from '../components/Footer'
 
@@ -139,10 +138,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         {!isDefinitelyConnected && <ConnectButton />}
 
-        <h1 className={styles.title}>
+        <h1>
           Welcome to Talent Lens
         </h1>
         {isDefinitelyConnected && <a href={`/profile/${profile.handle}`}>View your profile, {address}</a>}

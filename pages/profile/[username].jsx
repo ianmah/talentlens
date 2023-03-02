@@ -104,8 +104,25 @@ query($request: ProfileQueryRequest!) {
   }
 }`
 
+const Header = style.div`
+  display: flex;
+  gap: 1em;
+  margin: 1em 0;
+  margin-top: 3em;
+`
+
+const H1 = style.h1`
+  margin: 8px 0;
+`
+
+const ButtonGroup = style.div`
+  display: flex;
+  gap: 6px;
+`
+
 const Bio = style.div`
   font-size: 1.4em;
+  margin-bottom: 1em;
 `
 
 const Stats = style.div`
@@ -115,16 +132,16 @@ const Stats = style.div`
 const H3 = style.h3`
   color: ${p => p.theme.color.primary04};
   font-weight: 400;
-  font-size: 12px;
-  margin: 3px 0;
+  font-size: 14px;
+  margin: 6px 0;
 `
 
 const Stat = style.p`
   color: ${p => p.theme.color.primary04};
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   display: inline-block;
-  margin: 0 12px 8px 0;
+  margin: 0 16px 12px 0;
   b {
     color: ${p => p.theme.text};
   }
@@ -142,8 +159,6 @@ const Profile = ({}) => {
       },
     }
   })
-
-  // console.log(talentProfile)
 
   const lensProfile = data && data.profiles.items[0] || {}
 
@@ -195,13 +210,21 @@ const Profile = ({}) => {
 
       <main>
         <ConnectButton />
-        <ProfileImg src={talentProfile.profile_picture_url}/>
-        <h1>
-          {talentProfile.name}
-        </h1>
-        <Button>{username}</Button>
-        <Button>{lensProfile.handle}</Button>
-        <Bio>{talentProfile.bio}</Bio>
+
+        <Header>
+          <ProfileImg src={talentProfile.profile_picture_url}/>
+          <div>
+            <H1>
+              {talentProfile.name}
+            </H1>
+            <ButtonGroup>
+              <Button>{username}</Button>
+              <Button>{lensProfile.handle}</Button>
+            </ButtonGroup>
+          </div>
+        </Header>
+        
+        <Bio>--E {talentProfile.bio}</Bio>
 
         <Stats>
           <H3>On Talent Protocol</H3>

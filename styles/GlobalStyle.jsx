@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyles = createGlobalStyle`
 @font-face {
   font-family: 'Acid Grotesk TP';
   src: url('/fonts/AcidGroteskTP-Light.otf');
@@ -28,3 +31,6 @@ a {
   color: inherit;
   text-decoration: none;
 }
+`
+
+export default GlobalStyles;

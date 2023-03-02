@@ -1,4 +1,3 @@
-import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
 import type { AppProps } from 'next/app'
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit'
@@ -8,6 +7,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import ThemeProvider from '../styles/ThemeProvider'
+import GlobalStyles from '../styles/GlobalStyle'
 
 const client = new ApolloClient({
   uri: 'https://api.lens.dev/',
@@ -44,6 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <ThemeProvider>
+        <GlobalStyles />
         <ApolloProvider client={client}>
           <RainbowKitProvider chains={chains}>
             <Component {...pageProps} />
