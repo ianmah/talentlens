@@ -49,21 +49,26 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   }, [setWagmiClient, setChains])
 
-  if (!wagmiClient) {
-    return <p>loading</p>    
-  }
-
   return (
-    <WagmiConfig client={wagmiClient}>
-    <RainbowKitProvider chains={chains}>
-    <ApolloProvider client={client}>
     <ThemeProvider>
       <GlobalStyles />
-      <Component {...pageProps} />
+      {
+        wagmiClient
+        ? <>
+        <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+        <ApolloProvider client={client}>
+        <ThemeProvider>
+          <GlobalStyles />
+          <Component {...pageProps} />
+        </ThemeProvider>
+        </ApolloProvider>
+        </RainbowKitProvider>
+        </WagmiConfig>
+        </>
+        : <p>loading</p> 
+      }
     </ThemeProvider>
-    </ApolloProvider>
-    </RainbowKitProvider>
-    </WagmiConfig>
   );
 }
 
