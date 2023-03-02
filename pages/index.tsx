@@ -74,7 +74,7 @@ const Home: NextPage = () => {
         </h1>
         
         {talentProfile.username ? <a href={`/profile/${talentProfile.username}`}>View your profile, {address}</a> : <>
-        <p>You don't seem to have a Talent profile.</p>
+        <p>You don\'t seem to have a Talent profile.</p>
         </>}
       </main>
 
