@@ -11,14 +11,18 @@ const Connections = ({ username, type }) => {
     if (type === 'followers-talent') {
       const getData = async () => {
         const res = await axios.get(`${API_URL}/api/connections/${username}?type=following`, {})
-        console.log(res.data)
-        setConnections(res.data.connections)
+        setConnections(res.data.connections.length ? res.data.connections : [])
       }
       getData()
       return 
     }
     if (type === 'following-talent') {
-      return <p>hi ing t</p>
+      const getData = async () => {
+        const res = await axios.get(`${API_URL}/api/connections/${username}?type=follower`, {})
+        setConnections(res.data.connections.length ? res.data.connections : [])
+      }
+      getData()
+      return
     }
     if (type === 'followers-lens') {
       return <p>hi ers L</p>
@@ -26,18 +30,12 @@ const Connections = ({ username, type }) => {
     if (type === 'following-lens') {
       return <p>hi ing L</p>
     }
-  }, [])
+  }, [type])
 
-  if (type === 'followers-talent') {
+  if (type === 'followers-talent' || type === 'following-talent') {
     return <>
-    {
-      connections.map(connection => {
-        return <p>{connection.username}</p>
-      })
-    }</>
-  }
-  if (type === 'following-talent') {
-    return <p>hi ing t</p>
+      {connections.map(connection => <p>{connection.username}</p>)}
+    </>
   }
   if (type === 'followers-lens') {
     return <p>hi ers L</p>
@@ -45,8 +43,7 @@ const Connections = ({ username, type }) => {
   if (type === 'following-lens') {
     return <p>hi ing L</p>
   }
-  return <>
-  </>
+  return <></>
 }
 
 export default Connections
