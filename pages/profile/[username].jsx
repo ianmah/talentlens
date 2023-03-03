@@ -10,7 +10,7 @@ import style from 'styled-components'
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
 import Button from '../../components/Button'
-import FollowList from '../../components/FollowList'
+import Connections from '../../components/Connections'
 import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
 
@@ -271,7 +271,8 @@ const Profile = ({ }) => {
         </Stats>
 
         {(router.query.followers || router.query.following) && 
-          <FollowList
+          <Connections
+            username={username}
             type={router.query.followers
               ? `followers-${router.query.followers}`
               : `following-${router.query.following}`

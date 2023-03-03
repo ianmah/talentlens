@@ -6,12 +6,18 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store')
   res.setHeader('Cache-Control', 'no-cache')
 
-  if (req.method !== "GET" || !req.query || !req.query.handle) {
+  if (req.method !== "GET") {
     return res.status(400).json({ message: "Bad request" })
   }
   const handle = req.query.handle
+  const type = req.query.type
+  
+  if (!type) {
+    return res.status(400).json({ message: "Include a type (follower/following)" })
+  }
+  
   try {
-    const talentreq = await axios.get(`${TALENT_API}/talents/${handle}`,
+    const talentreq = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=${type}`,
       {
         headers: {
           'X-API-KEY': process.env.TALENT_API_KEY
