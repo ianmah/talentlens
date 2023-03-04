@@ -34,7 +34,11 @@ const Connections = ({ username, type }) => {
 
   if (type === 'followers-talent' || type === 'following-talent') {
     return <>
-      {connections.map(connection => <p>{connection.username}</p>)}
+      {connections.map(connection => (
+        <p key={connection.username}>
+          {connection.username}
+        </p>
+      ))}
     </>
   }
   if (type === 'followers-lens') {

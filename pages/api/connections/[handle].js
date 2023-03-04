@@ -26,12 +26,20 @@ export default async function handler(req, res) {
         }
       })
 
-    const wallets = getWallets(talentreq.data)
-    await getLensProfiles(wallets)
+    const walletLensProfiles = await getLensProfiles(getWallets(talentreq.data))
+    console.log(walletLensProfiles)
 
-    return res.status(200).json(talentreq.data)
+    const mappedLensProfiles = talentreq.data.followers.map(follower => {
+      return {
+        ...follower,
+        lensHandle: walletLensProfiles[follower.wallet_address]
+      }
+    })
+    
+
+    return res.status(200).json(mappedLensProfiles)
   } catch (e) {
-    console.log(JSON.stringify(e.response.data))
+    console.log(e)
     return res.status(404).json({ message: "Not found" })
   }
 }
@@ -61,7 +69,19 @@ async function getLensProfiles(wallets) {
         },
       }
     })
-    
+
   })
-  console.log(res.data)
+  try {
+    const profiles = res.data.data.profiles.items
+    
+    const walletProfiles = {}
+    profiles.forEach(profile => {
+      walletProfiles[profile.ownedBy.toLowerCase()] = profile.handle
+    })
+
+    return walletProfiles
+  } catch (e) {
+    console.log('error parsing results', e)
+    return {}
+  }
 }
