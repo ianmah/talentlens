@@ -19,7 +19,9 @@ const theme = {
   color: PRIMITIVES,
   primary: PRIMITIVES.primary,
   text: PRIMITIVES.primary01,
+  textSecondary: PRIMITIVES.primary04,
   bg: '#131415',
+  font: 'Acid Grotesk TP',
 }
 
 export default ({ children }: Props) => <ThemeProvider theme={theme}>{children}</ThemeProvider>

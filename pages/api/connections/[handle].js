@@ -27,7 +27,6 @@ export default async function handler(req, res) {
       })
 
     const walletLensProfiles = await getLensProfiles(getWallets(talentreq.data))
-    console.log(walletLensProfiles)
 
     const mappedLensProfiles = talentreq.data.followers.map(follower => {
       return {

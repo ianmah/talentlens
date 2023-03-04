@@ -56,11 +56,13 @@ const Stat = style.p`
   text-decoration: underline rgba(255, 255, 255, 0);
   transition: text-decoration-color 200ms;
   text-underline-offset: 4px;
-  
+
+  ${p => p.onClick && `
   &:hover {
     text-decoration: underline rgba(255, 255, 255, 1);
     cursor: pointer;
   }
+  `}
   
   b {
     color: ${p => p.theme.text};
@@ -71,7 +73,7 @@ const Profile = ({ }) => {
   const router = useRouter()
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
-  const [getProfiles, { loading, error, data }] = useLazyQuery(GET_PROFILES, {
+  const [getProfiles, { loading, error, data }] = useLazyQuery(gql`${GET_PROFILES}`, {
     variables: {
       request: {
         ownedBy: [talentProfile.wallet_address],
@@ -101,7 +103,7 @@ const Profile = ({ }) => {
         following_count,
         profile_picture_url,
         wallet_address,
-        headline: headline || 'This is a hardcoded bio until one is added to API'
+        headline
       })
     }
     getData()
@@ -142,7 +144,7 @@ const Profile = ({ }) => {
           </div>
         </Header>
 
-        <Headline>--E {talentProfile.headline}</Headline>
+        {talentProfile.headline && <Headline>--E {talentProfile.headline}</Headline>}
 
         <Stats>
           <H3>On Talent Protocol</H3>
@@ -153,11 +155,7 @@ const Profile = ({ }) => {
           >
             <b>{talentProfile.followers_count}</b> Followers
           </Stat>
-          <Stat
-            onClick={() => {
-              router.push(`/profile/${username}/?following=talent`, undefined, { shallow: true })
-            }}
-          >
+          <Stat>
             <b>{talentProfile.following_count}</b> Following
           </Stat>
           {lensProfile.stats && <>

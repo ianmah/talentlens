@@ -9,6 +9,7 @@ const StyledButton = style.button`
   font-size: 1em;
   cursor: pointer;
   color: ${p => p.theme.text};
+  font-family: ${p => p.theme.font};
 
   border: 1px solid ${p => p.theme.text};
   padding: 0.5em 1em;
