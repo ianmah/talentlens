@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLazyQuery, gql } from '@apollo/client'
 import axios from 'axios'
 import style from 'styled-components'
 import { useRouter } from 'next/router'
@@ -6,6 +7,7 @@ import { useRouter } from 'next/router'
 import { API_URL } from '../util/api'
 import ProfileImg from './ProfileImg'
 import Button from './Button'
+import GET_FOLLOWERS from '../util/queries/getFollowers'
 
 const Profile = style.div`
   display: flex;
@@ -33,9 +35,16 @@ const Username = style.span`
 `
 
 
-const Connections = ({ username, type }) => {
+const Connections = ({ username, type, profileId }) => {
   const router = useRouter()
   const [connections, setConnections] = useState([])
+  const [getFollowers, { loading, error, data }] = useLazyQuery(gql`${GET_FOLLOWERS}`, {
+    variables: {
+      request: {
+        profileId: profileId,
+      },
+    }
+  })
 
   useEffect(() => {
     if (type === 'followers-talent') {
@@ -44,7 +53,7 @@ const Connections = ({ username, type }) => {
         setConnections(res.data.length ? res.data : [])
       }
       getData()
-      return 
+      return
     }
     if (type === 'following-talent') {
       const getData = async () => {
@@ -55,6 +64,7 @@ const Connections = ({ username, type }) => {
       return
     }
     if (type === 'followers-lens') {
+      getFollowers()
       return
     }
     if (type === 'following-lens') {
@@ -71,13 +81,25 @@ const Connections = ({ username, type }) => {
             <b>{connection.name}</b>
             <Username>{connection.username}</Username>
           </UsernameContainer>
-          {connection.lensHandle && <StyledButton>{connection.lensHandle}</StyledButton>}
+          {connection.lensHandle &&
+            <StyledButton
+              title="View on LensFrens"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`https://www.lensfrens.xyz/${connection.lensHandle}`}
+            >
+              {connection.lensHandle}
+            </StyledButton>}
         </Profile>
       ))}
     </>
   }
   if (type === 'followers-lens') {
-    return <p>hi ers L</p>
+    return <>
+      {
+        data && data.followers.items.map(follower => <p>{follower.wallet.defaultProfile.handle}</p>)
+      }
+    </>
   }
   if (type === 'following-lens') {
     return <p>hi ing L</p>

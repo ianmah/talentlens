@@ -33,6 +33,7 @@ const ButtonGroup = style.div`
 
 const Headline = style.div`
   font-size: 1.4em;
+  line-height: 1.35em;
   margin-bottom: 1em;
 `
 
@@ -81,6 +82,7 @@ const Profile = ({ }) => {
       },
     }
   })
+
 
   const lensProfile = data && data.profiles.items[0] || {}
 
@@ -139,7 +141,14 @@ const Profile = ({ }) => {
             </H1>
             <ButtonGroup>
               <Button>{username}</Button>
-              <Button>{lensProfile.handle}</Button>
+              <Button
+                title="View on LensFrens"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`https://lensfrens.xyz/${lensProfile.handle}`}
+              >
+                {lensProfile.handle}
+              </Button>
             </ButtonGroup>
           </div>
         </Header>
@@ -180,6 +189,7 @@ const Profile = ({ }) => {
         {(router.query.followers || router.query.following) &&
           <Connections
             username={username}
+            profileId={lensProfile.id}
             type={router.query.followers
               ? `followers-${router.query.followers}`
               : `following-${router.query.following}`
