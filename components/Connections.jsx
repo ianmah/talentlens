@@ -97,7 +97,7 @@ const Connections = ({ username, type, profileId }) => {
   if (type === 'followers-lens') {
     return <>
       {
-        data && data.followers.items.map(follower => <p>{follower.wallet.defaultProfile.handle}</p>)
+        data && data.followers.items.map(follower => <p key={follower.wallet.defaultProfile.handle}>{follower.wallet.defaultProfile.handle}</p>)
       }
     </>
   }
