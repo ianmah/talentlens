@@ -70,7 +70,7 @@ const Connections = ({ username, type, profileId }) => {
     if (type === 'following-lens') {
       return
     }
-  }, [type])
+  }, [type, getFollowers, username])
 
   if (type === 'followers-talent' || type === 'following-talent') {
     return <>
