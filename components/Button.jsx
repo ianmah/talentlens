@@ -14,6 +14,13 @@ const StyledButton = style.button`
   border: 1px solid ${p => p.theme.text};
   padding: 0.5em 1em;
   border-radius: 6px;
+
+  transition: all 200ms;
+
+  :hover {
+    border-color: ${p => p.theme.primary};
+    color: ${p => p.theme.primary};
+  }
 `
 
 const Button = ({ children, href, ...props }) => {
