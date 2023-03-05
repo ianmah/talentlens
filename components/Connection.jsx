@@ -19,6 +19,9 @@ export const UsernameContainer = style.div`
   :hover {
     cursor: pointer;
   }
+  b {
+    color: ${p => p.theme.text};
+  }
 `
 
 export const StyledButton = style(Button)`
@@ -30,9 +33,9 @@ export const Username = style.span`
   color: ${p => p.theme.textSecondary};
   padding-top: 2px;
   display: block;
-  b {
-    color: ${p => p.theme.text};
-  }
+`
+
+const UserLink = style.a`
 `
 
 const LensConnection = ({ profile, type }) => {
@@ -55,7 +58,7 @@ const LensConnection = ({ profile, type }) => {
             wallet_address,
             headline
           } = res.data.talent
-    
+
           setTalentProfile({
             name,
             username,
@@ -78,23 +81,23 @@ const LensConnection = ({ profile, type }) => {
       router.push(`/profile/${talentProfile.username}`)
     }
   }
-  
+
   return <Profile>
     <ProfileImg size='50px' src={profileImgSrc} />
     <UsernameContainer
       onClick={handleClick}
     >
-      <Username><b>{profile.name}</b> @{profile.handle}</Username>
-      <Username>{talentProfile.username ? `@${talentProfile.username}` : 'No Talent profile'}</Username>
+      <b>{profile.name}</b><UserLink> {talentProfile.username && `✦ @${talentProfile.username}`}</UserLink>
+      <Username>@{profile.handle}</Username>
     </UsernameContainer>
-      <StyledButton
-        title="View on LensFrens"
-        target="_blank"
-        rel="noopener noreferrer"
-        href={`https://www.lensfrens.xyz/${profile.handle}`}
-      >
-        Follow
-      </StyledButton>
+    <StyledButton
+      title="View on LensFrens"
+      target="_blank"
+      rel="noopener noreferrer"
+      href={`https://www.lensfrens.xyz/${profile.handle}`}
+    >
+      Follow
+    </StyledButton>
   </Profile>
 }
 

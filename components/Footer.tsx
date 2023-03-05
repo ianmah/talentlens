@@ -8,7 +8,10 @@ const StyledFooter = style.footer`
     border-top: 1px solid ${p => p.theme.color.primary04};
     justify-content: center;
     align-items: center;
-    color: ${p => p.theme.color.primary04};
+    a {
+      color: ${p => p.theme.color.primary04};
+    }
+    
 `
 
 const Footer = () => {

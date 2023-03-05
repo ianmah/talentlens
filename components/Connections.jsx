@@ -121,7 +121,6 @@ const Connections = ({ username, type, profileId, address }) => {
     </>
   }
   if (type === 'following-lens') {
-    console.log(getFollowingRes)
     return <>
       {
         getFollowingRes.data && getFollowingRes.data.following.items.map(follower => (

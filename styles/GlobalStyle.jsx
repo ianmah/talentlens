@@ -29,8 +29,16 @@ body {
 }
 
 a {
-  color: inherit;
+  color: ${p => p.theme.primary};
   text-decoration: none;
+  
+  text-decoration: underline rgba(187, 237, 85, 0);
+  transition: text-decoration-color 200ms;
+  text-underline-offset: 2px;
+  
+  &:hover {
+    text-decoration: underline rgba(187, 237, 85, 1);
+  }
 }
 `
 
