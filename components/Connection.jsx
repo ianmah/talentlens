@@ -87,7 +87,7 @@ const LensConnection = ({ profile, type }) => {
     <UsernameContainer
       onClick={handleClick}
     >
-      <b>{profile.name}</b><UserLink> {talentProfile.username && `✦ @${talentProfile.username}`}</UserLink>
+      <b>{profile.name}</b> <UserLink>{talentProfile.username && `✦ @${talentProfile.username}`}</UserLink>
       <Username>@{profile.handle}</Username>
     </UsernameContainer>
     <StyledButton

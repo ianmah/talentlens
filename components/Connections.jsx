@@ -91,8 +91,8 @@ const Connections = ({ username, type, profileId, address }) => {
         <Profile key={connection.username}>
           <ProfileImg size='50px' src={connection.profile_picture_url} />
           <UsernameContainer onClick={() => router.push(`/profile/${connection.username}`)}>
-            <Username><b>{connection.name}</b> @{connection.username}</Username>
-            <Username>{connection.lensHandle || 'No Lens profile'}</Username>
+            <b>{connection.name}</b> <a>{connection.lensHandle && `✦ @${connection.lensHandle}`}</a>
+            <Username>@{connection.username}</Username>
           </UsernameContainer>
           {connection.lensHandle &&
             <StyledButton
