@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { API_URL } from '../util/api'
 import ProfileImg from './ProfileImg'
 import Button from './Button'
+import Connection from './Connection'
 import GET_FOLLOWERS from '../util/queries/getFollowers'
 
 const Profile = style.div`
@@ -97,7 +98,7 @@ const Connections = ({ username, type, profileId }) => {
   if (type === 'followers-lens') {
     return <>
       {
-        data && data.followers.items.map(follower => <p key={follower.wallet.defaultProfile.handle}>{follower.wallet.defaultProfile.handle}</p>)
+        data && data.followers.items.map(follower => <Connection profile={follower.wallet.defaultProfile} key={follower.wallet.address}/>)
       }
     </>
   }
