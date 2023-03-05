@@ -33,6 +33,9 @@ const Username = style.span`
   color: ${p => p.theme.textSecondary};
   padding-top: 2px;
   display: block;
+  b {
+    color: ${p => p.theme.text};
+  }
 `
 
 
@@ -79,8 +82,8 @@ const Connections = ({ username, type, profileId }) => {
         <Profile key={connection.username}>
           <ProfileImg size='50px' src={connection.profile_picture_url} />
           <UsernameContainer onClick={() => router.push(`/profile/${connection.username}`)}>
-            <b>{connection.name}</b>
-            <Username>{connection.username}</Username>
+            <Username><b>{connection.name}</b> @{connection.username}</Username>
+            <Username>{connection.lensHandle || 'No Lens profile'}</Username>
           </UsernameContainer>
           {connection.lensHandle &&
             <StyledButton
@@ -89,7 +92,7 @@ const Connections = ({ username, type, profileId }) => {
               rel="noopener noreferrer"
               href={`https://www.lensfrens.xyz/${connection.lensHandle}`}
             >
-              {connection.lensHandle}
+              Follow
             </StyledButton>}
         </Profile>
       ))}
@@ -98,7 +101,13 @@ const Connections = ({ username, type, profileId }) => {
   if (type === 'followers-lens') {
     return <>
       {
-        data && data.followers.items.map(follower => <Connection profile={follower.wallet.defaultProfile} key={follower.wallet.address}/>)
+        data && data.followers.items.map(follower => (
+          <Connection
+            profile={follower.wallet.defaultProfile}
+            key={follower.wallet.address}
+            type="lens"
+          />
+        ))
       }
     </>
   }

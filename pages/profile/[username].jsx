@@ -44,14 +44,13 @@ const Stats = style.div`
 const H3 = style.h3`
   color: ${p => p.theme.color.primary04};
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
   margin: 6px 0;
 `
 
 const Stat = style.p`
   color: ${p => p.theme.color.primary04};
   font-weight: 400;
-  font-size: 14px;
   display: inline-block;
   margin: 0 16px 12px 0;
   text-decoration: underline rgba(255, 255, 255, 0);
