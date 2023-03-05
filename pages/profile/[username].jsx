@@ -189,6 +189,7 @@ const Profile = ({ }) => {
           <Connections
             username={username}
             profileId={lensProfile.id}
+            address={talentProfile.wallet_address}
             type={router.query.followers
               ? `followers-${router.query.followers}`
               : `following-${router.query.following}`

@@ -9,6 +9,7 @@ import ProfileImg from './ProfileImg'
 import Button from './Button'
 import Connection from './Connection'
 import GET_FOLLOWERS from '../util/queries/getFollowers'
+import GET_FOLLOWING from '../util/queries/getFollowing'
 
 const Profile = style.div`
   display: flex;
@@ -39,13 +40,20 @@ const Username = style.span`
 `
 
 
-const Connections = ({ username, type, profileId }) => {
+const Connections = ({ username, type, profileId, address }) => {
   const router = useRouter()
   const [connections, setConnections] = useState([])
   const [getFollowers, { loading, error, data }] = useLazyQuery(gql`${GET_FOLLOWERS}`, {
     variables: {
       request: {
-        profileId: profileId,
+        profileId,
+      },
+    }
+  })
+  const [getFollowing, getFollowingRes] = useLazyQuery(gql`${GET_FOLLOWING}`, {
+    variables: {
+      request: {
+        address,
       },
     }
   })
@@ -72,6 +80,7 @@ const Connections = ({ username, type, profileId }) => {
       return
     }
     if (type === 'following-lens') {
+      getFollowing()
       return
     }
   }, [type, getFollowers, username])
@@ -112,7 +121,18 @@ const Connections = ({ username, type, profileId }) => {
     </>
   }
   if (type === 'following-lens') {
-    return <p>hi ing L</p>
+    console.log(getFollowingRes)
+    return <>
+      {
+        getFollowingRes.data && getFollowingRes.data.following.items.map(follower => (
+          <Connection
+            profile={follower.profile}
+            key={follower.profile.ownedBy}
+            type="lens"
+          />
+        ))
+      }
+    </>
   }
   return <></>
 }
