@@ -1,5 +1,5 @@
 import '@rainbow-me/rainbowkit/styles.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -17,6 +17,7 @@ const Content = style.div`
 `
 
 const Home = () => {
+  const [talentProfile, setTalentProfile] = useState({})
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const router = useRouter()
@@ -28,6 +29,7 @@ const Home = () => {
           const res = await axios.get(`${API_URL}/api/talent/${address}`, {})
           const { username } = res.data.talent
           router.push(`/profile/${username}`)
+          setTalentProfile(res.data.talent)
         } catch (e) {
           console.log('no talent profile found')
         }}
@@ -49,6 +51,7 @@ const Home = () => {
       <main>
         <Content>
           <h1>Welcome</h1>
+          {talentProfile.username}
           {isConnected
             ? <>
               No Talent profile found. <a href="#" onClick={() => disconnect()}>Switch wallets</a> or&nbsp;
