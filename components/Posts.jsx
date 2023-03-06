@@ -37,7 +37,7 @@ const Posts = ({ handle, profileId }) => {
       {
         data && data.publications.items.map(pub => {
           const profileImgSrc = pub.profile.picture?.original?.url.replace('ipfs://', 'https://lens.infura-ipfs.io/ipfs/')
-          return <Post key={profileImgSrc}>
+          return <Post key={pub.id}>
             <div>
               <ProfileImg src={profileImgSrc} size="50px" />
             </div>

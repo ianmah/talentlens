@@ -10,16 +10,16 @@ export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(400).json({ message: "Bad request" })
   }
-  const handle = req.query.handle
+  const handle = req.query.handle.toLowerCase()
   const type = req.query.type
 
-  if (!type) {
+  if (type !== 'follower' && type !== 'following') {
     return res.status(400).json({ message: "Include a type (follower/following)" })
   }
 
   try {
-    // const talentreq = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=${type}`,
-    const talentreq = await axios.get(`${TALENT_API}/followers?id=${handle.toLowerCase()}`,
+    const talentreq = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=${type}`,
+      // const talentreq = await axios.get(`${TALENT_API}/followers?id=${handle}`,
       {
         headers: {
           'X-API-KEY': process.env.TALENT_API_KEY
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
     const walletLensProfiles = await getLensProfiles(getWallets(talentreq.data))
 
-    const mappedLensProfiles = talentreq.data.followers.map(follower => {
+    const mappedLensProfiles = talentreq.data.connections.map(follower => {
       return {
         ...follower,
         lensHandle: walletLensProfiles[follower.wallet_address]
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 }
 
 function getWallets(data) {
-  const connections = data.followers
+  const connections = data.connections
 
   const wallets = connections.map(connection => {
     return connection.wallet_address || '0x0000000000000000000000000000000000000000'

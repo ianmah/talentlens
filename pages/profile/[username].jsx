@@ -189,26 +189,46 @@ const Profile = ({ }) => {
               <H3>On Talent Protocol</H3>
               <Stat
                 onClick={() => {
-                  router.push(`/profile/${username}/?followers=talent`, undefined, { shallow: true })
+                  router.push(
+                    `/profile/${username}/?followers=talent`,
+                    undefined,
+                    { shallow: true }
+                  )
                 }}
               >
                 <b>{talentProfile.followers_count}</b> Followers
               </Stat>
-              <Stat>
+              <Stat
+                onClick={() => {
+                  router.push(
+                    `/profile/${username}/?following=talent`,
+                    undefined,
+                    { shallow: true }
+                  )
+                }}
+              >
                 <b>{talentProfile.following_count}</b> Following
               </Stat>
               {lensProfile.stats && <>
                 <H3>On Lens Protocol</H3>
                 <Stat
                   onClick={() => {
-                    router.push(`/profile/${username}/?followers=lens`, undefined, { shallow: true })
+                    router.push(
+                      `/profile/${username}/?followers=lens`,
+                      undefined,
+                      { shallow: true }
+                    )
                   }}
                 >
                   <b>{lensProfile.stats.totalFollowers}</b> Followers
                 </Stat>
                 <Stat
                   onClick={() => {
-                    router.push(`/profile/${username}/?following=lens`, undefined, { shallow: true })
+                    router.push(
+                      `/profile/${username}/?following=lens`,
+                      undefined,
+                      { shallow: true }
+                    )
                   }}
                 >
                   <b>{lensProfile.stats.totalFollowing}</b> Following
