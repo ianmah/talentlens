@@ -15,7 +15,7 @@ const Post = style.div`
   gap: 10px;
 `
 
-const Posts = ({ profile, profileId }) => {  
+const Posts = ({ handle, profileId }) => {  
   const [getPosts, { loading, error, data }] = useLazyQuery(gql`${GET_POSTS}`, {
     variables: {
       request: {
@@ -36,7 +36,6 @@ const Posts = ({ profile, profileId }) => {
     <>
       {
         data && data.publications.items.map(pub => {
-          
           const profileImgSrc = pub.profile.picture?.original?.url.replace('ipfs://', 'https://lens.infura-ipfs.io/ipfs/')
           return <Post key={profileImgSrc}>
             <div>
@@ -49,6 +48,7 @@ const Posts = ({ profile, profileId }) => {
           </Post>
         })
       }
+      {data && !data.publications.items.length && `No lens posts by ${handle}`}
     </>
   )
 }

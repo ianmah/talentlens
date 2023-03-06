@@ -230,7 +230,7 @@ const Profile = ({ }) => {
               {router.query.following && <MenuItem href="#" selected>following</MenuItem>}   
             </Menu>
 
-            {!showConnections && <Posts profileId={lensProfile.id} />}
+            {!showConnections && <Posts handle={lensProfile.handle} profileId={lensProfile.id} />}
     
             {showConnections && 
               <Connections

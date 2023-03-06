@@ -34,7 +34,6 @@ export default async function handler(req, res) {
         lensHandle: walletLensProfiles[follower.wallet_address]
       }
     })
-    
 
     return res.status(200).json(mappedLensProfiles)
   } catch (e) {
@@ -47,40 +46,46 @@ function getWallets(data) {
   const connections = data.followers
 
   const wallets = connections.map(connection => {
-    return connection.wallet_address
+    return connection.wallet_address || '0x0000000000000000000000000000000000000000'
   })
+
   return wallets
 }
 
 async function getLensProfiles(wallets) {
-  const res = await axios({
-    method: 'POST',
-    url: `https://api.lens.dev/`,
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({
-      query: GET_PROFILES.default,
-      variables: {
-        request: {
-          ownedBy: wallets,
-          limit: 10,
-        },
-      }
-    })
-
-  })
   try {
-    const profiles = res.data.data.profiles.items
-    
-    const walletProfiles = {}
-    profiles.forEach(profile => {
-      walletProfiles[profile.ownedBy.toLowerCase()] = profile.handle
-    })
+    const res = await axios({
+      method: 'POST',
+      url: `https://api.lens.dev/`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({
+        query: GET_PROFILES.default,
+        variables: {
+          request: {
+            ownedBy: wallets,
+            limit: 10,
+          },
+        }
+      })
 
-    return walletProfiles
+    })
+    try {
+      const profiles = res.data.data.profiles.items
+
+      const walletProfiles = {}
+      profiles.forEach(profile => {
+        walletProfiles[profile.ownedBy.toLowerCase()] = profile.handle
+      })
+
+      return walletProfiles
+    } catch (e) {
+      console.warn('error parsing results', e)
+      return {}
+    }
   } catch (e) {
-    console.log('error parsing results', e)
+    console.warn('lenserr ', e.message)
     return {}
   }
 }

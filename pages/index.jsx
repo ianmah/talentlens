@@ -21,6 +21,7 @@ const Home = () => {
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const router = useRouter()
+  const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
     if (isConnected) {
@@ -32,6 +33,7 @@ const Home = () => {
           setTalentProfile(res.data.talent)
         } catch (e) {
           console.log('no talent profile found')
+          setNotFound(true)
         }}
       getProfile()
     }
@@ -51,17 +53,17 @@ const Home = () => {
       <main>
         <Content>
           <h1>Welcome</h1>
-          {talentProfile.username}
           {isConnected
             ? <>
-              No Talent profile found. <a href="#" onClick={() => disconnect()}>Switch wallets</a> or&nbsp;
+              {notFound ? <>
+                No Talent profile found. <a href="#" onClick={() => disconnect()}>Switch wallets</a> or&nbsp;
               <a
                 href="https://www.talentprotocol.com/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 create an account
-              </a>.
+              </a>.</> : 'Loading...'}
             </>
             : <p>Connect your wallet to get started --E</p>
           }

@@ -61,16 +61,24 @@ const Connections = ({ username, type, profileId, address }) => {
   useEffect(() => {
     if (type === 'followers-talent') {
       const getData = async () => {
-        const res = await axios.get(`${API_URL}/api/connections/${username}?type=following`, {})
-        setConnections(res.data.length ? res.data : [])
+        try {
+          const res = await axios.get(`${API_URL}/api/connections/${username}?type=following`, {})
+          setConnections(res.data.length ? res.data : [])          
+        } catch (e) {
+          
+        }
       }
       getData()
       return
     }
     if (type === 'following-talent') {
       const getData = async () => {
-        const res = await axios.get(`${API_URL}/api/connections/${username}?type=follower`, {})
-        setConnections(res.data.length ? res.data : [])
+        try {
+          const res = await axios.get(`${API_URL}/api/connections/${username}?type=follower`, {})
+          setConnections(res.data.length ? res.data : [])
+        } catch (e) {
+          
+        }
       }
       getData()
       return
@@ -83,7 +91,7 @@ const Connections = ({ username, type, profileId, address }) => {
       getFollowing()
       return
     }
-  }, [type, getFollowers, getFollowing, username])
+  }, [type, username])
 
   if (type === 'followers-talent' || type === 'following-talent') {
     return <>
