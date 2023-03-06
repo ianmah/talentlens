@@ -88,23 +88,7 @@ const Profile = ({ }) => {
     if (!username) return;
     const getData = async () => {
       const res = await axios.get(`${API_URL}/api/talent/${username}`, {})
-      const {
-        name,
-        followers_count,
-        following_count,
-        profile_picture_url,
-        wallet_address,
-        headline
-      } = res.data.talent
-
-      setTalentProfile({
-        name,
-        followers_count,
-        following_count,
-        profile_picture_url,
-        wallet_address,
-        headline
-      })
+      setTalentProfile(res.data.talent)
     }
     getData()
   }, [setTalentProfile, username])
@@ -131,69 +115,75 @@ const Profile = ({ }) => {
       <main>
         <ConnectButton />
 
-        <Header>
-          <ProfileImg src={talentProfile.profile_picture_url} />
-          <div>
-            <H1>
-              {talentProfile.name}
-            </H1>
-            <ButtonGroup>
-              <Button>{username}</Button>
-              <Button
-                title="View on LensFrens"
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`https://lensfrens.xyz/${lensProfile.handle}`}
+        {
+          talentProfile.username
+          ? <>
+            <Header>
+              <ProfileImg src={talentProfile.profile_picture_url} />
+              <div>
+                <H1>
+                  {talentProfile.name}
+                </H1>
+                <ButtonGroup>
+                  <Button>{username}</Button>
+                  <Button
+                    title="View on LensFrens"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://lensfrens.xyz/${lensProfile.handle}`}
+                  >
+                    {lensProfile.handle}
+                  </Button>
+                </ButtonGroup>
+              </div>
+            </Header>
+    
+            {talentProfile.headline && <Headline>--E {talentProfile.headline}</Headline>}
+    
+            <Stats>
+              <H3>On Talent Protocol</H3>
+              <Stat
+                onClick={() => {
+                  router.push(`/profile/${username}/?followers=talent`, undefined, { shallow: true })
+                }}
               >
-                {lensProfile.handle}
-              </Button>
-            </ButtonGroup>
-          </div>
-        </Header>
-
-        {talentProfile.headline && <Headline>--E {talentProfile.headline}</Headline>}
-
-        <Stats>
-          <H3>On Talent Protocol</H3>
-          <Stat
-            onClick={() => {
-              router.push(`/profile/${username}/?followers=talent`, undefined, { shallow: true })
-            }}
-          >
-            <b>{talentProfile.followers_count}</b> Followers
-          </Stat>
-          <Stat>
-            <b>{talentProfile.following_count}</b> Following
-          </Stat>
-          {lensProfile.stats && <>
-            <H3>On Lens Protocol</H3>
-            <Stat
-              onClick={() => {
-                router.push(`/profile/${username}/?followers=lens`, undefined, { shallow: true })
-              }}
-            >
-              <b>{lensProfile.stats.totalFollowers}</b> Followers
-            </Stat>
-            <Stat
-              onClick={() => {
-                router.push(`/profile/${username}/?following=lens`, undefined, { shallow: true })
-              }}
-            >
-              <b>{lensProfile.stats.totalFollowing}</b> Following
-            </Stat>
-          </>}
-        </Stats>
-
-        {(router.query.followers || router.query.following) &&
-          <Connections
-            username={username}
-            profileId={lensProfile.id}
-            address={talentProfile.wallet_address}
-            type={router.query.followers
-              ? `followers-${router.query.followers}`
-              : `following-${router.query.following}`
+                <b>{talentProfile.followers_count}</b> Followers
+              </Stat>
+              <Stat>
+                <b>{talentProfile.following_count}</b> Following
+              </Stat>
+              {lensProfile.stats && <>
+                <H3>On Lens Protocol</H3>
+                <Stat
+                  onClick={() => {
+                    router.push(`/profile/${username}/?followers=lens`, undefined, { shallow: true })
+                  }}
+                >
+                  <b>{lensProfile.stats.totalFollowers}</b> Followers
+                </Stat>
+                <Stat
+                  onClick={() => {
+                    router.push(`/profile/${username}/?following=lens`, undefined, { shallow: true })
+                  }}
+                >
+                  <b>{lensProfile.stats.totalFollowing}</b> Following
+                </Stat>
+              </>}
+            </Stats>
+    
+            {(router.query.followers || router.query.following) &&
+              <Connections
+                username={username}
+                profileId={lensProfile.id}
+                address={talentProfile.wallet_address}
+                type={router.query.followers
+                  ? `followers-${router.query.followers}`
+                  : `following-${router.query.following}`
+                }
+              />
             }
-          />
+          </>
+          : <></>
         }
       </main>
 

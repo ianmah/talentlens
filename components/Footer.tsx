@@ -10,13 +10,14 @@ const StyledFooter = style.footer`
     a {
       color: ${p => p.theme.color.primary04};
     }
-    position: absolute;
-    bottom: 1em;
-    width: 330px;
-    left: 0; 
-    right: 0; 
-    margin-left: auto; 
-    margin-right: auto;
+     position: absolute;
+     bottom: 0;
+     width: 330px;
+     height: 1.4em;
+     left: 0;
+     right: 0;
+     margin-left: auto;
+     margin-right: auto;
 `
 
 const Footer = () => {

@@ -6,8 +6,6 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store')
   res.setHeader('Cache-Control', 'no-cache')
 
-  console.log(req.query)
-
   if (req.method !== "GET" || !req.query || !req.query.handle) {
     return res.status(400).json({ message: "Bad request" })
   }

@@ -20,6 +20,7 @@ const GlobalStyles = createGlobalStyle`
 
 html,
 body {
+  height: 100%;
   font-size: 15px;
   background: #101113;
   padding: 0;
