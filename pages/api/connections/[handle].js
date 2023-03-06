@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
   try {
     // const talentreq = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=${type}`,
-    const talentreq = await axios.get(`${TALENT_API}/followers?id=${handle}`,
+    const talentreq = await axios.get(`${TALENT_API}/followers?id=${handle.toLowerCase()}`,
       {
         headers: {
           'X-API-KEY': process.env.TALENT_API_KEY
