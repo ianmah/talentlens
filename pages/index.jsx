@@ -12,7 +12,7 @@ import Container from '../components/Container'
 import Footer from '../components/Footer'
 
 const Content = style.div`
-  margin-top: 25vh;
+  padding-top: 25vh;
   margin-bottom: 5em;
 `
 
