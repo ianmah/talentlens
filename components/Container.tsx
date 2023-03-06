@@ -7,6 +7,6 @@ export default style.div`
   margin: 0 auto;
   display: block;
   background: ${p => p.theme.bg};
-  min-height: 90vh;
+  min-height: calc(100vh - 100px);
   position:relative;
 `
