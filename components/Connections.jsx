@@ -83,7 +83,7 @@ const Connections = ({ username, type, profileId, address }) => {
       getFollowing()
       return
     }
-  }, [type, getFollowers, username])
+  }, [type, getFollowers, getFollowing, username])
 
   if (type === 'followers-talent' || type === 'following-talent') {
     return <>

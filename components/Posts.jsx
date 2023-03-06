@@ -15,13 +15,7 @@ const Post = style.div`
   gap: 10px;
 `
 
-const Posts = ({ profile, profileId }) => {
-  useEffect(() => {
-    if(profileId) {
-      getPosts()
-    }
-  }, [profileId])
-  
+const Posts = ({ profile, profileId }) => {  
   const [getPosts, { loading, error, data }] = useLazyQuery(gql`${GET_POSTS}`, {
     variables: {
       request: {
@@ -32,13 +26,19 @@ const Posts = ({ profile, profileId }) => {
     }
   })
   
+  useEffect(() => {
+    if(profileId) {
+      getPosts()
+    }
+  }, [profileId, getPosts])
+  
   return ( 
     <>
       {
         data && data.publications.items.map(pub => {
           
           const profileImgSrc = pub.profile.picture?.original?.url.replace('ipfs://', 'https://lens.infura-ipfs.io/ipfs/')
-          return <Post>
+          return <Post key={profileImgSrc}>
             <div>
               <ProfileImg src={profileImgSrc} size="50px" />
             </div>

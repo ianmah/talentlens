@@ -45,7 +45,7 @@ const LensConnection = ({ profile, type }) => {
 
   useEffect(() => {
     if (type === 'lens') {
-      const wallet = profile.ownedBy.toLowerCase()
+      const wallet = profile.ownedBy
       const getProfile = async () => {
         try {
           const res = await axios.get(`${API_URL}/api/talent/${wallet}`, {})
@@ -74,7 +74,7 @@ const LensConnection = ({ profile, type }) => {
       }
       getProfile()
     }
-  }, [type, setTalentProfile])
+  }, [type, setTalentProfile, profile.ownedBy])
 
   const handleClick = () => {
     if (talentProfile.username) {

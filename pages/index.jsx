@@ -35,7 +35,7 @@ const Home = () => {
         }}
       getProfile()
     }
-  }, [address, isConnected])
+  }, [address, isConnected, router])
 
   return (
     <Container>

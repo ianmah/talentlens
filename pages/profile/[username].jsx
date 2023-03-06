@@ -99,6 +99,7 @@ const Profile = ({ }) => {
   })
 
   const lensProfile = data && data.profiles.items[0] || {}
+  const showConnections = (router.query.followers || router.query.following)
 
   useEffect(() => {
     if (!username) return;
@@ -190,7 +191,7 @@ const Profile = ({ }) => {
             <Menu>
               <MenuItem
                 href="#"
-                selected={!(router.query.followers || router.query.following)}
+                selected={!showConnections}
                 onClick={() => 
                   router.replace(`/profile/${username}`, undefined, { shallow: true })
                 }
@@ -201,9 +202,9 @@ const Profile = ({ }) => {
               {router.query.following && <MenuItem href="#" selected>following</MenuItem>}   
             </Menu>
 
-            <Posts profileId={lensProfile.id} />
+            {!showConnections && <Posts profileId={lensProfile.id} />}
     
-            {(router.query.followers || router.query.following) && 
+            {showConnections && 
               <Connections
                 username={username}
                 profileId={lensProfile.id}
