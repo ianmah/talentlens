@@ -82,7 +82,6 @@ const Profile = ({ }) => {
     }
   })
 
-
   const lensProfile = data && data.profiles.items[0] || {}
 
   useEffect(() => {
