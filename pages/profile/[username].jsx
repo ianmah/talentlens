@@ -10,6 +10,7 @@ import style from 'styled-components'
 import Container from '../../components/Container'
 import Footer from '../../components/Footer'
 import Button from '../../components/Button'
+import Posts from '../../components/Posts'
 import Connections from '../../components/Connections'
 import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
@@ -69,8 +70,19 @@ const Stat = style.p`
   }
 `
 
-const MenuItem = style.h2`
-  font-size: 16px;
+const Menu = style.div`
+  display: flex;
+  gap: 14px;
+  margin-bottom: 1em;
+`
+
+const MenuItem = style.a`
+  color: ${p => p.theme.text};
+  font-weight: bold;
+  font-size: 18px;
+  ${p => p.selected && `
+    text-decoration: underline rgba(187, 237, 85, 1);
+  `}
 `
 
 const Profile = ({ }) => {
@@ -175,14 +187,23 @@ const Profile = ({ }) => {
               </>}
             </Stats>
 
-            {!(router.query.followers || router.query.following) &&
-              <MenuItem>posts</MenuItem>
-            }
+            <Menu>
+              <MenuItem
+                href="#"
+                selected={!(router.query.followers || router.query.following)}
+                onClick={() => 
+                  router.replace(`/profile/${username}`, undefined, { shallow: true })
+                }
+              >
+                posts
+              </MenuItem>
+              {router.query.followers && <MenuItem href="#" selected>followers</MenuItem>}
+              {router.query.following && <MenuItem href="#" selected>following</MenuItem>}   
+            </Menu>
+
+            <Posts profileId={lensProfile.id} />
     
-            {(router.query.followers || router.query.following) &&
-              <>
-              {router.query.followers && <MenuItem>followers</MenuItem>}
-              {router.query.following && <MenuItem>following</MenuItem>}              
+            {(router.query.followers || router.query.following) && 
               <Connections
                 username={username}
                 profileId={lensProfile.id}
@@ -192,7 +213,6 @@ const Profile = ({ }) => {
                   : `following-${router.query.following}`
                 }
               />
-              </>
             }
           </>
           : <></>
