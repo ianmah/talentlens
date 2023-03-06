@@ -89,6 +89,7 @@ const Profile = ({ }) => {
   const router = useRouter()
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
+  const [notFound, setNotFound] = useState(false)
   const [getProfiles, { loading, error, data }] = useLazyQuery(gql`${GET_PROFILES}`, {
     variables: {
       request: {
@@ -104,8 +105,13 @@ const Profile = ({ }) => {
   useEffect(() => {
     if (!username) return;
     const getData = async () => {
-      const res = await axios.get(`${API_URL}/api/talent/${username}`, {})
-      setTalentProfile(res.data.talent)
+      try {
+        const res = await axios.get(`${API_URL}/api/talent/${username}`, {})
+        setTalentProfile(res.data.talent)
+      } catch (e) {
+        console.log('no talent profile found')
+        setNotFound(true)
+      }
     }
     getData()
   }, [setTalentProfile, username])
@@ -117,6 +123,28 @@ const Profile = ({ }) => {
   }, [getProfiles, talentProfile.wallet_address])
 
   const title = `${username} ✦ Talentlens`
+
+  if (notFound) {
+    return <Container>
+      <Head>
+        <title>{title}</title>
+        <meta
+          name={title}
+          content="Talent Protocol x Lens social app"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <H1>
+          Profile {username} not found :(
+        </H1>
+      </main>
+    </Container>
+  }
 
   return (
     <Container>
