@@ -113,7 +113,7 @@ const Connections = ({ username, type, profileId, address }) => {
         data && data.followers.items.map(follower => (
           <Connection
             profile={follower.wallet.defaultProfile}
-            key={follower.wallet.address}
+            key={follower.wallet.address + follower.wallet.defaultProfile.handle}
             type="lens"
           />
         ))
@@ -126,7 +126,7 @@ const Connections = ({ username, type, profileId, address }) => {
         getFollowingRes.data && getFollowingRes.data.following.items.map(follower => (
           <Connection
             profile={follower.profile}
-            key={follower.profile.ownedBy}
+            key={follower.profile.ownedBy + follower.profile.handle}
             type="lens"
           />
         ))

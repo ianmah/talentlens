@@ -69,6 +69,10 @@ const Stat = style.p`
   }
 `
 
+const MenuItem = style.h2`
+  font-size: 16px;
+`
+
 const Profile = ({ }) => {
   const router = useRouter()
   const { username } = router.query
@@ -170,8 +174,15 @@ const Profile = ({ }) => {
                 </Stat>
               </>}
             </Stats>
+
+            {!(router.query.followers || router.query.following) &&
+              <MenuItem>posts</MenuItem>
+            }
     
             {(router.query.followers || router.query.following) &&
+              <>
+              {router.query.followers && <MenuItem>followers</MenuItem>}
+              {router.query.following && <MenuItem>following</MenuItem>}              
               <Connections
                 username={username}
                 profileId={lensProfile.id}
@@ -181,6 +192,7 @@ const Profile = ({ }) => {
                   : `following-${router.query.following}`
                 }
               />
+              </>
             }
           </>
           : <></>
