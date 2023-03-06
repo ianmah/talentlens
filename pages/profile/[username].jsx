@@ -170,15 +170,22 @@ const Profile = ({ }) => {
                   {talentProfile.name}
                 </H1>
                 <ButtonGroup>
-                  <Button>{username}</Button>
                   <Button
+                    title="View on Talent Protocol"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://beta.talentprotocol.com/u/${username}`}
+                  >
+                    @{username}
+                  </Button>
+                  {lensProfile.handle && <Button
                     title="View on LensFrens"
                     target="_blank"
                     rel="noopener noreferrer"
                     href={`https://lensfrens.xyz/${lensProfile.handle}`}
                   >
                     {lensProfile.handle}
-                  </Button>
+                  </Button>}
                 </ButtonGroup>
               </div>
             </Header>
@@ -237,7 +244,7 @@ const Profile = ({ }) => {
             </Stats>
 
             <Menu>
-              <MenuItem
+              {lensProfile.handle && <MenuItem
                 href="#"
                 selected={!showConnections}
                 onClick={() => 
@@ -245,7 +252,7 @@ const Profile = ({ }) => {
                 }
               >
                 posts
-              </MenuItem>
+              </MenuItem>}
               {router.query.followers && <MenuItem href="#" selected>followers</MenuItem>}
               {router.query.following && <MenuItem href="#" selected>following</MenuItem>}   
             </Menu>

@@ -18,6 +18,14 @@ export default async function handler(req, res) {
   }
 
   try {
+    const mutualFollows = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=mutual_follow`,
+      {
+        headers: {
+          'X-API-KEY': process.env.TALENT_API_KEY
+        }
+      })
+    
+    
     const talentreq = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=${type}`,
       // const talentreq = await axios.get(`${TALENT_API}/followers?id=${handle}`,
       {
@@ -26,9 +34,11 @@ export default async function handler(req, res) {
         }
       })
 
-    const walletLensProfiles = await getLensProfiles(getWallets(talentreq.data))
+    const connections = [...mutualFollows.data.connections, ...talentreq.data.connections]
 
-    const mappedLensProfiles = talentreq.data.connections.map(follower => {
+    const walletLensProfiles = await getLensProfiles(getWallets(connections))
+
+    const mappedLensProfiles = connections.map(follower => {
       return {
         ...follower,
         lensHandle: walletLensProfiles[follower.wallet_address]
@@ -42,9 +52,7 @@ export default async function handler(req, res) {
   }
 }
 
-function getWallets(data) {
-  const connections = data.connections
-
+function getWallets(connections) {
   const wallets = connections.map(connection => {
     return connection.wallet_address || '0x0000000000000000000000000000000000000000'
   })
