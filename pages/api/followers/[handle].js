@@ -17,14 +17,14 @@ export default async function handler(req, res) {
 
   if (profileId) {
     const lensFollowers = await getLensFollowers(profileId)
-    
+
     const lensWallets = {}
     lensFollowers.forEach(connection => {
       lensWallets[connection.wallet.address.toLowerCase()] = {
         lensHandle: connection.wallet.defaultProfile.handle,
         profile_picture_url: connection.wallet.defaultProfile.picture?.original?.url,
         name: connection.wallet.defaultProfile.name,
-    }
+      }
     })
 
     const talentProfilesFromLensWallets = await axios({
@@ -48,22 +48,22 @@ export default async function handler(req, res) {
   try {
     const mutualFollows = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=mutual_follow`, { headers })
     const followers = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=following`, { headers })
-    
+
     const walletMap = {}
-    
+
     const connections = [...mutualFollows.data.connections, ...followers.data.connections]
-    
+
     connections.forEach(connection => {
-      if(!connection.wallet_address){
+      if (!connection.wallet_address) {
         connection.wallet_address = '0x0000000000000000000000000000000000000000'
       }
       walletMap[connection.wallet_address.toLowerCase()] = connection
     })
-    
+
     const walletLensProfiles = await getLensProfiles(walletMap)
 
 
-    return res.status(200).json(walletLensProfiles)
+    return res.status(200).json(Object.values(walletLensProfiles))
   } catch (e) {
     console.log(e)
     return res.status(404).json({ message: "Not found" })
