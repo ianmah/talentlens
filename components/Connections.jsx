@@ -62,9 +62,9 @@ const StyledButton = style(Button)`
   }
 `
 
-const FollowButton = ({ type, username }) => {
+const FollowButton = ({ type, username, ...props }) => {
   if(!username) return <></>;
-  return <StyledButton type={type}>
+  return <StyledButton type={type} {...props}>
     <span>@{username}</span><a>Follow</a>
   </StyledButton>
 }
@@ -110,7 +110,7 @@ const Connections = ({ username, type, profileId, address }) => {
         <Profile key={connection.username || connection.lensHandle}>
           <ProfileImg size='50px' src={connection.profile_picture_url} />
           <UsernameContainer>
-            <b onClick={() => router.push(`/profile/${connection.username}`)}>{connection.name}</b>
+            <b onClick={() => connection.username ? router.push(`/profile/${connection.username}`) : {}}>{connection.name}</b>
             <FollowButton
               type='talent'
               username={connection.username}
@@ -118,7 +118,7 @@ const Connections = ({ username, type, profileId, address }) => {
             <FollowButton
               type='lens'
               username={connection.lensHandle}
-              onClick={() => router.push(`https://lensfrens.xyz/${connection.lensHandle}`)}/>
+              href={`https://lensfrens.xyz/${connection.lensHandle}`}/>
           </UsernameContainer>
         </Profile>
       )

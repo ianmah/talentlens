@@ -25,7 +25,7 @@ const StyledButton = style.button`
 
 const Button = ({ children, href, ...props }) => {
   if (href) {
-    return <a href={href} {...props}>
+    return <a target="_blank" rel="noreferrer" href={href}>
       <StyledButton {...props}>{children}</StyledButton>
     </a>
   }
