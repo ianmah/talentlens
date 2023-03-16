@@ -6,7 +6,6 @@ import { useRouter } from 'next/router'
 import { API_URL } from '../util/api'
 import ProfileImg from './ProfileImg'
 import Button from './Button'
-import Connection from './Connection'
 
 const Profile = style.div`
   display: flex;
@@ -20,26 +19,30 @@ const UsernameContainer = style.div`
   :hover {
     cursor: pointer;
   }
+  b {
+    margin-bottom: 3px;
+    display: block;
+  }
 `
 
 const StyledButton = style(Button)`
-  margin-left: auto;
-  padding: 0.4em 0.5em;
-`
-
-const Username = style.span`
+  padding: 0.5em;
+  margin-right: 4px;
+  font-size: 12px;
+  border-color: ${p => p.theme.textSecondary};
   color: ${p => p.theme.textSecondary};
-  padding-top: 2px;
-  display: block;
+  :hover {
+    border-color: ${p => p.type === 'lens' ? p.theme.primary : p.theme.secondary};
+    color: ${p => p.type === 'lens' ? p.theme.primary : p.theme.secondary};
+  }
 `
 
-const TalentHandle = style.span`
-  color: ${p => p.theme.textSecondary};
-`
-
-const LensHandle = style.span`
-  color: ${p => p.theme.primary};
-`
+const FollowButton = ({ type, username }) => {
+  if(!username) return <></>;
+  return <StyledButton type={type}>
+    <span>@{username}</span>
+  </StyledButton>
+}
 
 
 const Connections = ({ username, type, profileId, address }) => {
@@ -83,7 +86,8 @@ const Connections = ({ username, type, profileId, address }) => {
           <ProfileImg size='50px' src={connection.profile_picture_url || 'https://beta.talentprotocol.com/packs/media/images/648f6f70811618825dc9.png'} />
           <UsernameContainer onClick={() => router.push(`/profile/${connection.username}`)}>
             <b>{connection.name}</b>
-            <Username><TalentHandle>{talentHandle}</TalentHandle> {talentHandle && lensHandle && '|'} <LensHandle>{lensHandle}</LensHandle></Username>
+            <FollowButton type='talent' username={connection.username} />
+            <FollowButton type='lens' username={connection.lensHandle} />
           </UsernameContainer>
         </Profile>
       )

@@ -22,6 +22,7 @@ export const UsernameContainer = style.div`
   b {
     color: ${p => p.theme.text};
   }
+  margin-bottom: 2px;
 `
 
 export const StyledButton = style(Button)`

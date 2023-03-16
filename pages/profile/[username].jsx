@@ -185,7 +185,7 @@ const Profile = ({ }) => {
                     rel="noopener noreferrer"
                     href={`https://lensfrens.xyz/${lensProfile.handle}`}
                   >
-                    {lensProfile.handle}
+                    @{lensProfile.handle}
                   </Button>}
                 </ButtonGroup>
               </div>
@@ -245,13 +245,13 @@ const Profile = ({ }) => {
             </Stats>
 
             <Menu>
-              {lensProfile.handle && <MenuItem
+              <MenuItem
                 href="#"
                 selected={!showConnections}
                 onClick={() => router.replace(`/profile/${username}`, undefined, { shallow: true })}
               >
                 posts
-              </MenuItem>}
+              </MenuItem>
               <MenuItem
                 href="#"
                 selected={showFollowers}
