@@ -35,12 +35,36 @@ const StyledButton = style(Button)`
     border-color: ${p => p.type === 'lens' ? p.theme.primary : p.theme.secondary};
     color: ${p => p.type === 'lens' ? p.theme.primary : p.theme.secondary};
   }
+  ${p => p.type === 'lens' ? `
+  position: relative;
+  span {
+    transition: opacity 100ms;
+  }
+  a {
+    transition: opacity 100ms;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-decoration: none;
+  }
+  :hover span {
+    opacity: 0;
+  }
+  :hover a {
+    opacity: 100;
+  }
+  ` : `a {
+    display: none;
+  }`
+  }
 `
 
 const FollowButton = ({ type, username }) => {
   if(!username) return <></>;
   return <StyledButton type={type}>
-    <span>@{username}</span>
+    <span>@{username}</span><a>Follow</a>
   </StyledButton>
 }
 
