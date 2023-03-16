@@ -209,7 +209,7 @@ const Profile = ({ }) => {
               <Stat
                 onClick={() => {
                   router.push(
-                    `/profile/${username}/?following=talent`,
+                    `/profile/${username}/?following`,
                     undefined,
                     { shallow: true }
                   )
@@ -233,7 +233,7 @@ const Profile = ({ }) => {
                 <Stat
                   onClick={() => {
                     router.push(
-                      `/profile/${username}/?following=lens`,
+                      `/profile/${username}/?following`,
                       undefined,
                       { shallow: true }
                     )
@@ -275,7 +275,7 @@ const Profile = ({ }) => {
                 username={username}
                 profileId={lensProfile.id}
                 address={talentProfile.wallet_address}
-                type={showFollowers ? `followers` : `following-${router.query.following}`
+                type={showFollowers ? `followers` : `following`
                 }
               />
             }
