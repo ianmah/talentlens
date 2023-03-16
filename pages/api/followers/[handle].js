@@ -14,15 +14,17 @@ export default async function handler(req, res) {
 
   const handle = req.query.handle
   const profileId = req.query.profileId
+  const lensWallets = {}
 
   if (profileId) {
     const lensFollowers = await getLensFollowers(profileId)
-
-    const lensWallets = {}
     lensFollowers.forEach(connection => {
+      const profile_picture_url = connection.wallet.defaultProfile.picture?.original?.url
+                                    .replace('ipfs://', 'https://lens.infura-ipfs.io/ipfs/')
+                                    || 'https://beta.talentprotocol.com/packs/media/images/648f6f70811618825dc9.png'
       lensWallets[connection.wallet.address.toLowerCase()] = {
         lensHandle: connection.wallet.defaultProfile.handle,
-        profile_picture_url: connection.wallet.defaultProfile.picture?.original?.url,
+        profile_picture_url,
         name: connection.wallet.defaultProfile.name,
       }
     })
@@ -42,7 +44,6 @@ export default async function handler(req, res) {
         username: profile.username,
       }
     })
-    return res.status(200).json(Object.values(lensWallets))
   }
 
   try {
@@ -62,8 +63,9 @@ export default async function handler(req, res) {
 
     const walletLensProfiles = await getLensProfiles(walletMap)
 
+    const profiles = {...walletLensProfiles, ...lensWallets}
 
-    return res.status(200).json(Object.values(walletLensProfiles))
+    return res.status(200).json(Object.values(profiles))
   } catch (e) {
     console.log(e)
     return res.status(404).json({ message: "Not found" })

@@ -8,7 +8,6 @@ import { API_URL } from '../util/api'
 import ProfileImg from './ProfileImg'
 import Button from './Button'
 import Connection from './Connection'
-import GET_FOLLOWERS from '../util/queries/getFollowers'
 import GET_FOLLOWING from '../util/queries/getFollowing'
 
 const Profile = style.div`
@@ -34,9 +33,14 @@ const Username = style.span`
   color: ${p => p.theme.textSecondary};
   padding-top: 2px;
   display: block;
-  b {
-    color: ${p => p.theme.text};
-  }
+`
+
+const TalentHandle = style.span`
+  color: ${p => p.theme.textSecondary};
+`
+
+const LensHandle = style.span`
+  color: ${p => p.theme.primary};
 `
 
 
@@ -52,19 +56,6 @@ const Connections = ({ username, type, profileId, address }) => {
   })
 
   useEffect(() => {
-    if (type === 'followers-talent') {
-      const getData = async () => {
-        try {
-          const res = await axios.get(`${API_URL}/api/followers/${username}`, {})
-          console.log(res.data)
-          setConnections(res.data.length ? res.data : [])
-        } catch (e) {
-
-        }
-      }
-      getData()
-      return
-    }
     if (type === 'following-talent') {
       const getData = async () => {
         try {
@@ -77,15 +68,14 @@ const Connections = ({ username, type, profileId, address }) => {
       getData()
       return
     }
-    if (type === 'followers-lens') {
+    if (type === 'followers') {
       if (!profileId) return;
       const getData = async () => {
         try {
           const res = await axios.get(`${API_URL}/api/followers/${username}?profileId=${profileId}`, {})
-          console.log(res.data)
           setConnections(res.data.length ? res.data : [])
         } catch (e) {
-
+          console.log('error fetching', e)
         }
       }
       getData()
@@ -95,47 +85,26 @@ const Connections = ({ username, type, profileId, address }) => {
       getFollowing()
       return
     }
-  }, [type, username])
+  }, [type, username, getFollowing, profileId])
 
-  if (type === 'followers-talent' || type === 'following-talent' || type === 'followers-lens') {
+  if (type === 'followers' || type === 'following-talent' || type === 'followers-lens') {
     return <>
       {connections.map(connection => {
         const talentHandle = connection.username ? '@' + connection.username : ''
         const lensHandle = connection.lensHandle ? '@' + connection.lensHandle : ''
         return (
-          <Profile key={connection.username}>
-            <ProfileImg size='50px' src={connection.profile_picture_url} />
+          <Profile key={connection.username || connection.lensHandle}>
+            <ProfileImg size='50px' src={connection.profile_picture_url || 'https://beta.talentprotocol.com/packs/media/images/648f6f70811618825dc9.png'} />
             <UsernameContainer onClick={() => router.push(`/profile/${connection.username}`)}>
               <b>{connection.name}</b>
-              <Username>{talentHandle} {talentHandle && lensHandle && '|'} {lensHandle}</Username>
+              <Username><TalentHandle>{talentHandle}</TalentHandle> {talentHandle && lensHandle && '|'} <LensHandle>{lensHandle}</LensHandle></Username>
             </UsernameContainer>
-            {connection.lensHandle &&
-              <StyledButton
-                title="View on LensFrens"
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`https://www.lensfrens.xyz/${connection.lensHandle}`}
-              >
-                Follow
-              </StyledButton>}
           </Profile>
         )
       })}
     </>
   }
-  // if (type === 'followers-lens') {
-  //   return <>
-  //     {
-  //       data && data.followers.items.map(follower => (
-  //         <Connection
-  //           profile={follower.wallet.defaultProfile}
-  //           key={follower.wallet.address + follower.wallet.defaultProfile.handle}
-  //           type="lens"
-  //         />
-  //       ))
-  //     }
-  //   </>
-  // }
+  
   if (type === 'following-lens') {
     return <>
       {

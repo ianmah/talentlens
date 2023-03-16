@@ -13,11 +13,13 @@ const PRIMITIVES = {
   surface01: '#1C1D1F',
   surface02: '#232427',
   primary: '#BBED55',
+  secondary: '#7857ED',
 }
 
 const theme = {
   color: PRIMITIVES,
   primary: PRIMITIVES.primary,
+  secondary: PRIMITIVES.secondary,
   text: PRIMITIVES.primary01,
   textSecondary: PRIMITIVES.primary04,
   bg: '#131415',

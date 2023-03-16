@@ -20,7 +20,6 @@ const Header = style.div`
   display: flex;
   gap: 1em;
   margin: 1em 0;
-  margin-top: 3em;
 `
 
 const H1 = style.h1`
@@ -100,7 +99,9 @@ const Profile = ({ }) => {
   })
 
   const lensProfile = data && data.profiles.items[0] || {}
-  const showConnections = (router.query.followers || router.query.following)
+  const showFollowing = (router.query.following !== undefined)
+  const showFollowers = (router.query.followers !== undefined)
+  const showConnections = (showFollowers || showFollowing)
 
   useEffect(() => {
     if (!username) return;
@@ -197,7 +198,7 @@ const Profile = ({ }) => {
               <Stat
                 onClick={() => {
                   router.push(
-                    `/profile/${username}/?followers=talent`,
+                    `/profile/${username}/?followers`,
                     undefined,
                     { shallow: true }
                   )
@@ -221,7 +222,7 @@ const Profile = ({ }) => {
                 <Stat
                   onClick={() => {
                     router.push(
-                      `/profile/${username}/?followers=lens`,
+                      `/profile/${username}/?followers`,
                       undefined,
                       { shallow: true }
                     )
@@ -247,14 +248,24 @@ const Profile = ({ }) => {
               {lensProfile.handle && <MenuItem
                 href="#"
                 selected={!showConnections}
-                onClick={() => 
-                  router.replace(`/profile/${username}`, undefined, { shallow: true })
-                }
+                onClick={() => router.replace(`/profile/${username}`, undefined, { shallow: true })}
               >
                 posts
               </MenuItem>}
-              {router.query.followers && <MenuItem href="#" selected>followers</MenuItem>}
-              {router.query.following && <MenuItem href="#" selected>following</MenuItem>}   
+              <MenuItem
+                href="#"
+                selected={showFollowers}
+                onClick={() => router.replace(`/profile/${username}?followers`, undefined, { shallow: true })}
+              >
+                followers
+              </MenuItem>
+              <MenuItem
+                href="#"
+                selected={showFollowing}
+                onClick={() => router.replace(`/profile/${username}?following`, undefined, { shallow: true })}
+              >
+                following
+              </MenuItem>
             </Menu>
 
             {!showConnections && <Posts handle={lensProfile.handle} profileId={lensProfile.id} />}
@@ -264,9 +275,7 @@ const Profile = ({ }) => {
                 username={username}
                 profileId={lensProfile.id}
                 address={talentProfile.wallet_address}
-                type={router.query.followers
-                  ? `followers-${router.query.followers}`
-                  : `following-${router.query.following}`
+                type={showFollowers ? `followers` : `following-${router.query.following}`
                 }
               />
             }

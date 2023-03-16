@@ -21,7 +21,7 @@ const GlobalStyles = createGlobalStyle`
 html,
 body {
   height: 100%;
-  font-size: 15px;
+  font-size: 14px;
   background: #101113;
   padding: 0;
   margin: 0;

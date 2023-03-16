@@ -27,7 +27,7 @@ const Home = () => {
     if (isConnected) {
       const getProfile = async () => {
         try {
-          const res = await axios.get(`${API_URL}/api/talent/${address}`, {})
+          const res = await axios.get(`${API_URL}/api/talent/${address.toLowerCase()}`, {})
           const { username } = res.data.talent
           router.push(`/profile/${username}`)
           setTalentProfile(res.data.talent)
