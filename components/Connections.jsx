@@ -54,6 +54,7 @@ const StyledButton = style(Button)`
   }
   :hover a {
     opacity: 100;
+    text-decoration: none;
   }
   ` : `a {
     display: none;

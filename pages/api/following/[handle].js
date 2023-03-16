@@ -94,7 +94,6 @@ async function getLensFollowing(address) {
         }
       })
     })
-    console.log(res.data.data.following.items)
     return res.data.data.following.items
   } catch (e) {
     console.log('Error getting Lens following', e)
