@@ -109,10 +109,16 @@ const Connections = ({ username, type, profileId, address }) => {
       return (
         <Profile key={connection.username || connection.lensHandle}>
           <ProfileImg size='50px' src={connection.profile_picture_url} />
-          <UsernameContainer onClick={() => router.push(`/profile/${connection.username}`)}>
-            <b>{connection.name}</b>
-            <FollowButton type='talent' username={connection.username} />
-            <FollowButton type='lens' username={connection.lensHandle} />
+          <UsernameContainer>
+            <b onClick={() => router.push(`/profile/${connection.username}`)}>{connection.name}</b>
+            <FollowButton
+              type='talent'
+              username={connection.username}
+              onClick={() => router.push(`/profile/${connection.username}`)} />
+            <FollowButton
+              type='lens'
+              username={connection.lensHandle}
+              onClick={() => router.push(`https://lensfrens.xyz/${connection.lensHandle}`)}/>
           </UsernameContainer>
         </Profile>
       )
