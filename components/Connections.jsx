@@ -40,7 +40,7 @@ const StyledButton = style(Button)`
   span {
     transition: opacity 100ms;
   }
-  a {
+  .follow {
     transition: opacity 100ms;
     opacity: 0;
     position: absolute;
@@ -52,11 +52,11 @@ const StyledButton = style(Button)`
   :hover span {
     opacity: 0;
   }
-  :hover a {
+  :hover .follow {
     opacity: 100;
     text-decoration: none;
   }
-  ` : `a {
+  ` : `.follow {
     display: none;
   }`
   }
@@ -65,7 +65,7 @@ const StyledButton = style(Button)`
 const FollowButton = ({ type, username, ...props }) => {
   if(!username) return <></>;
   return <StyledButton type={type} {...props}>
-    <span>@{username}</span><a>Follow</a>
+    <span>@{username}</span><span className='follow'>Follow</span>
   </StyledButton>
 }
 
@@ -100,12 +100,10 @@ const Connections = ({ username, type, profileId, address }) => {
       getData()
       return
     }
-  }, [type, username, profileId])
+  }, [type, username, profileId, address])
 
   return <>
     {connections.map(connection => {
-      const talentHandle = connection.username ? '@' + connection.username : ''
-      const lensHandle = connection.lensHandle ? '@' + connection.lensHandle : ''
       return (
         <Profile key={connection.username || connection.lensHandle}>
           <ProfileImg size='50px' src={connection.profile_picture_url} />

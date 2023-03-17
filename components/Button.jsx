@@ -1,4 +1,7 @@
 import style from 'styled-components'
+import { useLazyQuery, gql } from '@apollo/client'
+
+import GET_POSTS from '../util/queries/getPosts'
 
 const StyledButton = style.button`
   border: none;
@@ -23,7 +26,7 @@ const StyledButton = style.button`
   }
 `
 
-const Button = ({ children, href, ...props }) => {
+const Button = ({ children, href, lensHandle, ...props }) => {
   if (href) {
     return <a target="_blank" rel="noreferrer" href={href}>
       <StyledButton {...props}>{children}</StyledButton>

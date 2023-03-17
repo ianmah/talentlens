@@ -24,6 +24,7 @@ export default async function handler(req, res) {
                                     || 'https://beta.talentprotocol.com/packs/media/images/648f6f70811618825dc9.png'
       lensWallets[connection.wallet.address.toLowerCase()] = {
         lensHandle: connection.wallet.defaultProfile.handle,
+        lensId: connection.wallet.defaultProfile.id,
         profile_picture_url,
         name: connection.wallet.defaultProfile.name,
       }
@@ -130,7 +131,8 @@ async function getLensProfiles(walletMap) {
       profiles.forEach(profile => {
         walletMap[profile.ownedBy.toLowerCase()] = {
           ...walletMap[profile.ownedBy.toLowerCase()],
-          lensHandle: profile.handle
+          lensHandle: profile.handle,
+          lensId: profile.id,
         }
       })
 
