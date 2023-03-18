@@ -16,6 +16,7 @@ const GET_FOLLOWERS = `query($request: FollowersRequest!) {
           followNftAddress
             metadata
           isDefault
+          isFollowedByMe
           handle
           picture {
             ... on NftImage {

@@ -5,13 +5,19 @@ import { polygon } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import LensClient, { polygon as mainnet } from "@lens-protocol/client"
 
 import ThemeProvider from '../styles/ThemeProvider'
 import GlobalStyles from '../styles/GlobalStyle'
+import useLensClient, { LensProvider } from '../util/useLensClient'
 
 const client = new ApolloClient({
   uri: 'https://api.lens.dev/',
   cache: new InMemoryCache(),
+});
+
+const lensClient = new LensClient({
+  environment: mainnet
 });
 
 function MyApp({ Component, pageProps }) {
@@ -53,7 +59,7 @@ function MyApp({ Component, pageProps }) {
       <GlobalStyles />
       {
         wagmiClient
-          ? <>
+          ? <LensProvider client={lensClient}>
             <WagmiConfig client={wagmiClient}>
               <RainbowKitProvider chains={chains}>
                 <ApolloProvider client={client}>
@@ -64,7 +70,7 @@ function MyApp({ Component, pageProps }) {
                 </ApolloProvider>
               </RainbowKitProvider>
             </WagmiConfig>
-          </>
+            </LensProvider>
           : <p>loading</p>
       }
     </ThemeProvider>

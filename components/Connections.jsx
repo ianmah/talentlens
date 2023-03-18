@@ -115,6 +115,7 @@ const Connections = ({ username, type, profileId, address }) => {
               onClick={() => router.push(`/profile/${connection.username}`)} />
             <FollowButton
               type='lens'
+              lensId={connection.lensId}
               username={connection.lensHandle}
               href={`https://lensfrens.xyz/${connection.lensHandle}`}/>
           </UsernameContainer>

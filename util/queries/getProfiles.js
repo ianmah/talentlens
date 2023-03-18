@@ -13,6 +13,7 @@ const GET_PROFILES = `query($request: ProfileQueryRequest!) {
       followNftAddress
       metadata
       isDefault
+      isFollowedByMe
       picture {
         ... on NftImage {
           contractAddress

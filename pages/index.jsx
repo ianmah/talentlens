@@ -10,6 +10,7 @@ import { useAccount, useDisconnect } from 'wagmi'
 import { API_URL } from '../util/api'
 import Container from '../components/Container'
 import Footer from '../components/Footer'
+import useLensClient from '../util/useLensClient'
 
 const Content = style.div`
   padding-top: 25vh;
@@ -17,6 +18,7 @@ const Content = style.div`
 `
 
 const Home = () => {
+  const { setKey } = useLensClient()
   const [talentProfile, setTalentProfile] = useState({})
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
@@ -29,8 +31,9 @@ const Home = () => {
         try {
           const res = await axios.get(`${API_URL}/api/talent/${address.toLowerCase()}`, {})
           const { username } = res.data.talent
-          router.push(`/profile/${username}`)
+          setKey('testval')
           setTalentProfile(res.data.talent)
+          router.push(`/profile/${username}`)
         } catch (e) {
           console.log('no talent profile found')
           setNotFound(true)
