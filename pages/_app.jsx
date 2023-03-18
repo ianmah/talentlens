@@ -9,7 +9,7 @@ import LensClient, { polygon as mainnet } from "@lens-protocol/client"
 
 import ThemeProvider from '../styles/ThemeProvider'
 import GlobalStyles from '../styles/GlobalStyle'
-import useLensClient, { LensProvider } from '../util/useLensClient'
+import { LensProvider } from '../util/useLensClient'
 
 const client = new ApolloClient({
   uri: 'https://api.lens.dev/',
