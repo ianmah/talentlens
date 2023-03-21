@@ -30,13 +30,16 @@ const SignInWithLens = style(Button)`
 `
 
 const Home = () => {
-  const { lensClient, setKey } = useLensClient()
+  const { lensClient } = useLensClient()
   const [talentProfile, setTalentProfile] = useState({})
   const { address, isConnected } = useAccount()
 
   const auth = async (signature) => {
     await lensClient.authentication.authenticate(address, signature)
-    console.log(await lensClient.authentication.isAuthenticated())
+    const isAuthenticated = await lensClient.authentication.isAuthenticated()
+    if (isAuthenticated && talentProfile) {
+      router.push(`/profile/${talentProfile}`)
+    }
   }
 
   const { signMessage } = useSignMessage({
@@ -52,7 +55,7 @@ const Home = () => {
         try {
           const res = await axios.get(`${API_URL}/api/talent/${address.toLowerCase()}`, {})
           const { username } = res.data.talent
-          setTalentProfile(res.data.talent)
+          setTalentProfile(username)
           // router.push(`/profile/${username}`)
         } catch (e) {
           console.log('no talent profile found')

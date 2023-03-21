@@ -1,4 +1,5 @@
 import style from 'styled-components'
+import useLensClient from '../util/useLensClient'
 
 const StyledButton = style.button`
   border: none;
@@ -24,6 +25,16 @@ const StyledButton = style.button`
 `
 
 const Button = ({ children, href, lensHandle, lensId, ...props }) => {
+  const { lensClient } = useLensClient()
+
+  const handleFollow = async () => {
+    const followRes = await lensClient.proxyAction.freeFollow(lensId)
+    console.log(followRes)
+  }
+
+  if (lensId) {
+    return <StyledButton onClick={handleFollow} {...props}>{children}</StyledButton>
+  }
 
   if (href) {
     return <a target="_blank" rel="noreferrer" href={href}>

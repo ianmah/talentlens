@@ -17,7 +17,19 @@ const client = new ApolloClient({
 });
 
 const lensClient = new LensClient({
-  environment: mainnet
+  environment: mainnet,
+  storage: {
+    getItem: (key) => {
+      return window.localStorage.getItem(key);
+    },
+    setItem: (key, value) => {
+      console.log(key, value)
+      window.localStorage.setItem(key, value);
+    },
+    removeItem: (key) => {
+      window.localStorage.removeItem(key);
+    }
+  }
 });
 
 function MyApp({ Component, pageProps }) {

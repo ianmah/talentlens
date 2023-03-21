@@ -87,7 +87,7 @@ const MenuItem = style.a`
 
 const Profile = ({ }) => {
   const router = useRouter()
-  const { lensKey } = useLensClient()
+  const { lensClient } = useLensClient()
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
   const [notFound, setNotFound] = useState(false)
@@ -99,11 +99,17 @@ const Profile = ({ }) => {
       },
     }
   })
-  console.log('key', lensKey)
   const lensProfile = data && data.profiles.items[0] || {}
   const showFollowing = (router.query.following !== undefined)
   const showFollowers = (router.query.followers !== undefined)
   const showConnections = (showFollowers || showFollowing)
+
+  useEffect(() => {
+    const sync = async () => {
+      console.log(await lensClient.authentication.isAuthenticated())
+    }
+    sync()
+  })
 
   useEffect(() => {
     if (!username) return;
