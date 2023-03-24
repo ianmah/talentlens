@@ -7,6 +7,22 @@ const headers = {
   'X-API-KEY': process.env.TALENT_API_KEY
 }
 
+function sortConnections (x, y) {
+  if (x.lensHandle && x.username) {
+    return -1;
+  }
+  if (y.lensHandle && y.username) {
+    return 1;
+  }
+  if (x.lensHandle && !y.lensHandle) {
+      return -1;
+  }
+  if (!x.lensHandle && y.lensHandle) {
+      return 1;
+  }
+  return 0;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(400).json({ message: "Bad request" })
@@ -67,7 +83,10 @@ export default async function handler(req, res) {
 
     const profiles = {...walletLensProfiles, ...lensWallets}
 
-    return res.status(200).json(Object.values(profiles))
+    return res.status(200).json(
+      Object.values(profiles)
+        .sort((x, y) => sortConnections(x, y))
+      )
   } catch (e) {
     console.log(e)
     return res.status(404).json({ message: "Not found" })
