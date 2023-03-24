@@ -27,6 +27,7 @@ export default async function handler(req, res) {
         lensId: connection.wallet.defaultProfile.id,
         profile_picture_url,
         name: connection.wallet.defaultProfile.name,
+        isFollowedByMe: connection.wallet.defaultProfile.isFollowedByMe,
       }
     })
 
@@ -48,8 +49,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const mutualFollows = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=mutual_follow`, { headers })
-    const followers = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=following`, { headers })
+    const mutualFollows = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=mutual_subscribe`, { headers })
+    const followers = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=subscribing`, { headers })
 
     const walletMap = {}
 

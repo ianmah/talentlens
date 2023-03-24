@@ -117,6 +117,7 @@ const Connections = ({ username, type, profileId, address }) => {
               type='lens'
               lensId={connection.lensId}
               username={connection.lensHandle}
+              isFollowed={connection.isFollowedByMe}
               href={`https://lensfrens.xyz/${connection.lensHandle}`}/>
           </UsernameContainer>
         </Profile>

@@ -180,6 +180,7 @@ const Profile = ({ }) => {
                 </H1>
                 <ButtonGroup>
                   <Button
+                    secondary
                     title="View on Talent Protocol"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -212,7 +213,7 @@ const Profile = ({ }) => {
                   )
                 }}
               >
-                <b>{talentProfile.followers_count}</b> Followers
+                <b>{talentProfile.subscribers_count}</b> Followers
               </Stat>
               <Stat
                 onClick={() => {
@@ -223,7 +224,7 @@ const Profile = ({ }) => {
                   )
                 }}
               >
-                <b>{talentProfile.following_count}</b> Following
+                <b>{talentProfile.subscribing_count}</b> Following
               </Stat>
               {lensProfile.stats && <>
                 <H3>On Lens Protocol</H3>

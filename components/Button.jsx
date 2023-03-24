@@ -9,18 +9,18 @@ const StyledButton = style.button`
   background: transparent;
   font-size: 1em;
   cursor: pointer;
-  color: ${p => p.theme.text};
+  color: ${p => p.theme.textSecondary};
   font-family: ${p => p.theme.font};
 
-  border: 1px solid ${p => p.theme.text};
+  border: 1px solid ${p => p.theme.textSecondary};
   padding: 0.5em 1em;
   border-radius: 6px;
 
   transition: all 200ms;
 
   :hover {
-    border-color: ${p => p.theme.primary};
-    color: ${p => p.theme.primary};
+    border-color: ${p => p.secondary ? p.theme.secondary : p.theme.primary};
+    color: ${p => p.secondary ? p.theme.secondary : p.theme.primary};
   }
 `
 
