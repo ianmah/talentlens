@@ -38,8 +38,7 @@ const Navbar = () => {
     }, [profile, setProfile, address, isConnected])
 
     return <Container>
-        {!profile.isAuthenticated && <SignInWithLens/>}
-        {profile.username && <p>@{profile.username}</p>}
+        {!profile.isAuthenticated && <SignInWithLens/>} 
         <StyledProfileImg size='24px' src={profile.profile_picture_url} />
     </Container>
 }

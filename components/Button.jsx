@@ -28,7 +28,42 @@ const StyledButton = style.button`
   }
 `
 
-const Button = ({ children, href, lensHandle, lensId, ...props }) => {
+const FollowButton = style(StyledButton)`
+  margin-right: 4px;
+  border-color: ${p => p.theme.textSecondary};
+  color: ${p => p.theme.textSecondary};
+  :hover {
+    border-color: ${p => p.type === 'lens' ? p.theme.primary : p.theme.secondary};
+    color: ${p => p.type === 'lens' ? p.theme.primary : p.theme.secondary};
+  }
+  position: relative;
+  span {
+    transition: opacity 100ms;
+  }
+  .follow {
+    transition: opacity 100ms;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-decoration: none;
+  }
+  :hover span {
+    opacity: 0;
+  }
+  :hover .follow {
+    opacity: 100;
+    text-decoration: none;
+  }
+`
+
+const MiniFollowButton = style(FollowButton)`
+  padding: 0.5em;
+  font-size: 12px;
+`
+
+const Button = ({ children, href, lensHandle, lensId, type, ...props }) => {
   const { lensClient } = useLensClient()
 
   const handleFollow = async () => {
@@ -36,8 +71,21 @@ const Button = ({ children, href, lensHandle, lensId, ...props }) => {
     console.log(followRes)
   }
 
-  if (lensId) {
-    return <StyledButton onClick={handleFollow} {...props}>{children}</StyledButton>
+  if (type === 'mini-lens') {
+    return <MiniFollowButton
+      type='lens'
+      onClick={handleFollow}
+      {...props}>
+      <span>{children}</span><span className='follow'>Follow</span>
+    </MiniFollowButton>
+  }
+
+  if (type === 'mini-talent') {
+    return <MiniFollowButton
+      type='talent'
+      {...props}>
+      <span>{children}</span><span className='follow'>Profile</span>
+    </MiniFollowButton>
   }
 
   if (href) {
