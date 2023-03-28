@@ -10,6 +10,7 @@ import LensClient, { polygon as mainnet } from "@lens-protocol/client"
 import ThemeProvider from '../styles/ThemeProvider'
 import GlobalStyles from '../styles/GlobalStyle'
 import { LensProvider } from '../util/useLensClient'
+import { ProfileProvider } from '../util/useProfile'
 
 const client = new ApolloClient({
   uri: 'https://api.lens.dev/',
@@ -23,8 +24,7 @@ const lensClient = new LensClient({
       return window.localStorage.getItem(key);
     },
     setItem: (key, value) => {
-      console.log(key, value)
-      window.localStorage.setItem(key, value);
+      console.log(key, value);
     },
     removeItem: (key) => {
       window.localStorage.removeItem(key);
@@ -71,7 +71,8 @@ function MyApp({ Component, pageProps }) {
       <GlobalStyles />
       {
         wagmiClient
-          ? <LensProvider client={lensClient}>
+          ? <ProfileProvider>
+            <LensProvider client={lensClient}>
             <WagmiConfig client={wagmiClient}>
               <RainbowKitProvider chains={chains}>
                 <ApolloProvider client={client}>
@@ -83,6 +84,7 @@ function MyApp({ Component, pageProps }) {
               </RainbowKitProvider>
             </WagmiConfig>
             </LensProvider>
+            </ProfileProvider>
           : <p>loading</p>
       }
     </ThemeProvider>

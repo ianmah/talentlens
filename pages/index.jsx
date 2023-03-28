@@ -8,28 +8,19 @@ import style from 'styled-components'
 import { useAccount, useSignMessage, useDisconnect } from 'wagmi'
 
 import { API_URL } from '../util/api'
-import Button from '../components/Button'
+import Button, { SignInWithLens } from '../components/Button'
 import Container from '../components/Container'
 import Footer from '../components/Footer'
 import useLensClient from '../util/useLensClient'
+import useProfile from '../util/useProfile'
 
 const Content = style.div`
   padding-top: 25vh;
   margin-bottom: 5em;
 `
 
-const SignInWithLens = style(Button)`
-  background: ${p => p.theme.primary};
-  border-color: ${p => p.theme.primary};
-  color: ${p => p.theme.bg};
-  margin-bottom: 1em;
-  :hover {
-    color: ${p => p.theme.bg};
-    background-color: ${p => p.theme.primaryHover};
-  }
-`
-
 const Home = () => {
+  const { setProfile } = useProfile()
   const { lensClient } = useLensClient()
   const [talentProfile, setTalentProfile] = useState({})
   const { address, isConnected } = useAccount()
@@ -56,6 +47,7 @@ const Home = () => {
           const res = await axios.get(`${API_URL}/api/talent/${address.toLowerCase()}`, {})
           const { username } = res.data.talent
           setTalentProfile(username)
+          setProfile(res.data.talent)
           // router.push(`/profile/${username}`)
         } catch (e) {
           console.log('no talent profile found')
@@ -63,7 +55,7 @@ const Home = () => {
         }}
       getProfile()
     }
-  }, [address, isConnected, router])
+  }, [address, isConnected, router, setProfile])
 
   return (
     <Container>
@@ -92,12 +84,7 @@ const Home = () => {
                   create an account
                 </a>.</>
               : <>
-                <SignInWithLens onClick={async () => {
-                  const message = await lensClient.authentication.generateChallenge(address)
-                  await signMessage({ message })
-                }}>
-                  Sign in with Lens
-                </SignInWithLens>
+                <SignInWithLens/>
                 <br/>
                 <Button onClick={() => router.push(`/profile/${username}`)}>
                   Skip to Talent Profile

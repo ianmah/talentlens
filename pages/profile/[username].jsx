@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useLazyQuery, gql } from '@apollo/client'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import axios from 'axios'
+import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import style from 'styled-components'
@@ -12,10 +13,15 @@ import Footer from '../../components/Footer'
 import Button from '../../components/Button'
 import Posts from '../../components/Posts'
 import Connections from '../../components/Connections'
+import Navbar from '../../components/Navbar'
 import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
 import GET_PROFILES from '../../util/queries/getProfiles'
 import useLensClient from '../../util/useLensClient'
+
+const Spacer = style.pre`
+  height: 3em;
+`
 
 const Header = style.div`
   display: flex;
@@ -88,6 +94,7 @@ const MenuItem = style.a`
 const Profile = ({ }) => {
   const router = useRouter()
   const { lensClient } = useLensClient()
+  const { isConnected } = useAccount()
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
   const [notFound, setNotFound] = useState(false)
@@ -103,13 +110,6 @@ const Profile = ({ }) => {
   const showFollowing = (router.query.following !== undefined)
   const showFollowers = (router.query.followers !== undefined)
   const showConnections = (showFollowers || showFollowing)
-
-  useEffect(() => {
-    const sync = async () => {
-      console.log(await lensClient.authentication.isAuthenticated())
-    }
-    sync()
-  })
 
   useEffect(() => {
     if (!username) return;
@@ -167,7 +167,7 @@ const Profile = ({ }) => {
       </Head>
 
       <main>
-        <ConnectButton />
+        {isConnected ? <Navbar/> : <ConnectButton />}
 
         {
           talentProfile.username

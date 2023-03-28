@@ -1,5 +1,9 @@
+import { useEffect, useState } from 'react'
 import style from 'styled-components'
+import { useAccount, useSignMessage } from 'wagmi'
+
 import useLensClient from '../util/useLensClient'
+import useProfile from '../util/useProfile'
 
 const StyledButton = style.button`
   border: none;
@@ -42,6 +46,42 @@ const Button = ({ children, href, lensHandle, lensId, ...props }) => {
     </a>
   }
   return <StyledButton {...props}>{children}</StyledButton>
+}
+
+const SignInWithLensButton = style(Button)`
+  background: ${p => p.theme.primary};
+  border-color: ${p => p.theme.primary};
+  color: ${p => p.theme.bg};
+  :hover {
+    color: ${p => p.theme.bg};
+    background-color: ${p => p.theme.primaryHover};
+  }
+`
+
+export const SignInWithLens = () => {
+  const { profile, setProfile } = useProfile()
+  const [isAuth, setIsAuth] = useState(false)
+  const { address } = useAccount()
+  const { lensClient } = useLensClient()
+
+  const auth = async (signature) => {
+    await lensClient.authentication.authenticate(address, signature)
+    const isAuthenticated = await lensClient.authentication.isAuthenticated()
+    setIsAuth(isAuthenticated)
+    if (isAuthenticated) {
+      setProfile({ ...profile, isAuthenticated: true })
+    }
+  }
+  
+  const { signMessage } = useSignMessage({
+    onSuccess(data) { auth(data) },
+  })
+  return <SignInWithLensButton onClick={async () => {
+    const message = await lensClient.authentication.generateChallenge(address)
+    signMessage({ message })
+  }}>
+    Sign in with Lens
+  </SignInWithLensButton>
 }
 
 export default Button;
