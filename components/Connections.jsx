@@ -52,7 +52,13 @@ const Connections = ({ username, type, profileId, address }) => {
     if (type === 'following') {
       const getData = async () => {
         if (!address) {
-          const res = await axios.get(`${API_URL}/api/following/${username}?address=${address}`, {})
+          const res = await axios({
+            method: 'POST',
+            url: `${API_URL}/api/following/${username}`,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })
           setConnections(res.data.length ? res.data : [])
           return;
         }
@@ -60,14 +66,30 @@ const Connections = ({ username, type, profileId, address }) => {
         try {
           const res = await axios({
             method: 'POST',
-            url: `${API_URL}/api/following/${username}?address=${address}`,
+            url: `${API_URL}/api/following/${username}`,
             headers: {
               'Content-Type': 'application/json'
             },
             data: following.items
           })
+          const walletMap = res.data
+          const profiles = await lensClient.profile.fetchAll({ 
+            ownedBy: Object.keys(walletMap),
+          })
+          profiles.items.forEach(profile => {
+            walletMap[profile.ownedBy.toLowerCase()] = {
+              ...walletMap[profile.ownedBy.toLowerCase()],
+              lensHandle: profile.handle,
+              lensId: profile.id,
+              isFollowedByMe: profile.isFollowedByMe
+            }
+          })
+          
+          const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
+
+          setConnections(data)
           // const res = await axios.get(`${API_URL}/api/following/${username}?address=${address}`, { followers })
-          setConnections(res.data.length ? res.data : [])
+          // setConnections(res.data.length ? res.data : [])
         } catch (e) {
           console.log('error fetching', e)
         }
@@ -79,7 +101,13 @@ const Connections = ({ username, type, profileId, address }) => {
       const getData = async () => {
         if (!profileId) {
           try {
-            const res = await axios.get(`${API_URL}/api/followers/${username}`, {})
+            const res = await axios({
+              method: 'POST',
+              url: `${API_URL}/api/followers/${username}`,
+              headers: {
+                'Content-Type': 'application/json'
+              },
+            })
             setConnections(res.data.length ? res.data : [])
           } catch (e) {
             console.log('error fetching', e)
@@ -87,10 +115,10 @@ const Connections = ({ username, type, profileId, address }) => {
           
           return;
         }
-        // const followers = await lensClient.profile.allFollowers({ profileId })
-        const followers = {
-          items: FOLLOWERS
-        }
+        const followers = await lensClient.profile.allFollowers({ profileId })
+        // const followers = {
+        //   items: FOLLOWERS
+        // }
         
         try {
           const res = await axios({
@@ -99,7 +127,7 @@ const Connections = ({ username, type, profileId, address }) => {
             headers: {
               'Content-Type': 'application/json'
             },
-            data: []
+            data: followers.items
           })
           const walletMap = res.data
           const profiles = await lensClient.profile.fetchAll({ 
