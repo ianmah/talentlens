@@ -63,10 +63,23 @@ const MiniFollowButton = style(FollowButton)`
   font-size: 12px;
 `
 
+
 const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...props }) => {
   const { lensClient } = useLensClient()
+  const { address } = useAccount()
+  const { signMessage } = useSignMessage({
+    onSuccess(data) { auth(data) },
+  })
+  
+  const authenticate = async () => {
+    const message = await lensClient.authentication.generateChallenge(address)
+    signMessage({ message })
+  }
 
   const handleFollow = async () => {
+    if (!(await lensClient.authentication.isAuthenticated())) {
+      await authenticate(signMessage, lensClient)
+    }
     const followRes = await lensClient.proxyAction.freeFollow(lensId)
     console.log(followRes)
   }
@@ -74,7 +87,7 @@ const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...p
   if (type === 'mini-lens') {
     return <MiniFollowButton
       type='lens'
-      onClick={() => { if (!isFollowedByMe) {handleFollow}}}
+      onClick={() => { if (!isFollowedByMe) {handleFollow()}}}
       {...props}>
       <span>{children}</span>
       {isFollowedByMe ? <span className='follow'>Following</span> : <span className='follow'>Follow</span>}
@@ -84,7 +97,7 @@ const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...p
   if (type === 'lens') {
     return <FollowButton
       type='lens'
-      onClick={() => { if (!isFollowedByMe) {handleFollow}}}
+      onClick={() => { if (!isFollowedByMe) {handleFollow()}}}
       {...props}>
       <span>{children}</span>
       {isFollowedByMe ? <span className='follow'>Following</span> : <span className='follow'>Follow</span>}
@@ -125,6 +138,7 @@ export const SignInWithLens = () => {
   const { signMessage } = useSignMessage({
     onSuccess(data) { auth(data) },
   })
+
   return <SignInWithLensButton onClick={async () => {
     const message = await lensClient.authentication.generateChallenge(address)
     signMessage({ message })
