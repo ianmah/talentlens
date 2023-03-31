@@ -63,7 +63,7 @@ const MiniFollowButton = style(FollowButton)`
   font-size: 12px;
 `
 
-const Button = ({ children, href, lensHandle, lensId, type, ...props }) => {
+const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...props }) => {
   const { lensClient } = useLensClient()
 
   const handleFollow = async () => {
