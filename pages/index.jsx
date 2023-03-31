@@ -20,9 +20,8 @@ const Content = style.div`
 `
 
 const Home = () => {
-  const { setProfile } = useProfile()
+  const { profile, setProfile } = useProfile()
   const { lensClient } = useLensClient()
-  const [talentProfile, setTalentProfile] = useState({})
   const { address, isConnected } = useAccount()
 
   const auth = async (signature) => {
@@ -42,11 +41,10 @@ const Home = () => {
 
   useEffect(() => {
     if (isConnected) {
+      console.log('hi')
       const getProfile = async () => {
         try {
           const res = await axios.get(`${API_URL}/api/talent/${address.toLowerCase()}`, {})
-          const { username } = res.data.talent
-          setTalentProfile(username)
           setProfile(res.data.talent)
           // router.push(`/profile/${username}`)
         } catch (e) {
@@ -86,7 +84,8 @@ const Home = () => {
               : <>
                 <SignInWithLens/>
                 <br/>
-                <Button onClick={() => router.push(`/profile/${username}`)}>
+                <br/>
+                <Button onClick={() => router.push(`/profile/${profile.username}`)}>
                   Skip to Talent Profile
                 </Button>
               </>}
