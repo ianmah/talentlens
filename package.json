@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.8",
-    "@lens-protocol/client": "^0.2.0",
+    "@lens-protocol/client": "^1.0.0-beta.0",
     "@rainbow-me/rainbowkit": "^0.11.0",
     "axios": "^1.3.4",
     "ethers": "^5.7.2",

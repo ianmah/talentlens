@@ -74,9 +74,10 @@ const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...p
   if (type === 'mini-lens') {
     return <MiniFollowButton
       type='lens'
-      onClick={handleFollow}
+      onClick={() => { if (!isFollowedByMe) {handleFollow}}}
       {...props}>
-      <span>{children}</span><span className='follow'>Follow</span>
+      <span>{children}</span>
+      {isFollowedByMe ? <span className='follow'>Following</span> : <span className='follow'>Follow</span>}
     </MiniFollowButton>
   }
 

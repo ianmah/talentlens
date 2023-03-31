@@ -104,7 +104,6 @@ const Connections = ({ username, type, profileId, address }) => {
           const walletMap = res.data
           const profiles = await lensClient.profile.fetchAll({ 
             ownedBy: Object.keys(walletMap),
-            limit: 10,
           })
 
           profiles.items.forEach(profile => {

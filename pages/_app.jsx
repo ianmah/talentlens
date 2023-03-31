@@ -24,7 +24,7 @@ const lensClient = new LensClient({
       return window.localStorage.getItem(key);
     },
     setItem: (key, value) => {
-      console.log(key, value);
+      window.localStorage.setItem(key, value);
     },
     removeItem: (key) => {
       window.localStorage.removeItem(key);
