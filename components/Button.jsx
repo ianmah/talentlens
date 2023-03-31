@@ -119,18 +119,8 @@ const SignInWithLensButton = style(Button)`
 
 export const SignInWithLens = () => {
   const { profile, setProfile } = useProfile()
-  const [isAuth, setIsAuth] = useState(false)
   const { address } = useAccount()
   const { lensClient } = useLensClient()
-
-  const auth = async (signature) => {
-    await lensClient.authentication.authenticate(address, signature)
-    const isAuthenticated = await lensClient.authentication.isAuthenticated()
-    setIsAuth(isAuthenticated)
-    if (isAuthenticated) {
-      setProfile({ ...profile, isAuthenticated: true })
-    }
-  }
   
   const { signMessage } = useSignMessage({
     onSuccess(data) { auth(data) },

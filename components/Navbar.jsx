@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import { useAccount } from 'wagmi'
 
+import useLensClient from '../util/useLensClient'
 import { API_URL } from '../util/api'
 import useProfile from '../util/useProfile'
 import ProfileImg from './ProfileImg'
@@ -21,7 +22,17 @@ const StyledProfileImg = style(ProfileImg)`
 
 const Navbar = () => {
     const { isConnected, address } = useAccount()
+    const { lensClient } = useLensClient()
     const { profile, setProfile } = useProfile()
+    const [isAuth, setIsAuth] = useState(true)
+
+    useEffect(() => {
+        const getData = async () => {
+            const isAuthenticated = await lensClient.authentication.isAuthenticated()
+            setIsAuth(isAuthenticated)
+        }
+        getData()
+    }, [])
 
     useEffect(() => {
         if (profile.wallet_address || !isConnected) { return }
@@ -38,7 +49,7 @@ const Navbar = () => {
     }, [profile, setProfile, address, isConnected])
 
     return <Container>
-        {!profile.isAuthenticated && <SignInWithLens/>} 
+        {!isAuth && <SignInWithLens/>} 
         <StyledProfileImg size='24px' src={profile.profile_picture_url} />
     </Container>
 }
