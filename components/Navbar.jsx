@@ -32,7 +32,7 @@ const Navbar = () => {
             setIsAuth(isAuthenticated)
         }
         getData()
-    }, [])
+    }, [profile.isAuthenticated])
 
     useEffect(() => {
         if (profile.wallet_address || !isConnected) { return }

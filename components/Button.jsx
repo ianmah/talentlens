@@ -67,6 +67,14 @@ const MiniFollowButton = style(FollowButton)`
 const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...props }) => {
   const { lensClient } = useLensClient()
   const { address } = useAccount()
+
+  const auth = async (signature) => {
+    await lensClient.authentication.authenticate(address, signature)
+    // const isAuthenticated = await lensClient.authentication.isAuthenticated()
+    await lensClient.proxyAction.freeFollow(lensId)
+    location.reload()
+  }
+
   const { signMessage } = useSignMessage({
     onSuccess(data) { auth(data) },
   })
@@ -77,11 +85,15 @@ const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...p
   }
 
   const handleFollow = async () => {
-    if (!(await lensClient.authentication.isAuthenticated())) {
+    const isAuth = await lensClient.authentication.isAuthenticated()
+
+    if (!isAuth) {
+      console.log('auething')
       await authenticate(signMessage, lensClient)
+    } else {      
+      await lensClient.proxyAction.freeFollow(lensId)
+      location.reload()
     }
-    const followRes = await lensClient.proxyAction.freeFollow(lensId)
-    console.log(followRes)
   }
 
   if (type === 'mini-lens') {
@@ -131,10 +143,17 @@ const SignInWithLensButton = style(Button)`
 `
 
 export const SignInWithLens = () => {
-  const { profile, setProfile } = useProfile()
   const { address } = useAccount()
   const { lensClient } = useLensClient()
   
+  const auth = async (signature) => {
+    await lensClient.authentication.authenticate(address, signature)
+    const isAuthenticated = await lensClient.authentication.isAuthenticated()
+    if (isAuthenticated) {
+      setProfile({ ...profile, isAuthenticated: true })
+    }
+  }
+
   const { signMessage } = useSignMessage({
     onSuccess(data) { auth(data) },
   })
