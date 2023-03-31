@@ -147,8 +147,7 @@ const Connections = ({ username, type, profileId, address }) => {
               type='mini-lens'
               lensId={connection.lensId}
               username={connection.lensHandle}
-              isFollowedByMe={connection.isFollowedByMe}
-              href={`https://lensfrens.xyz/${connection.lensHandle}`}>
+              isFollowedByMe={connection.isFollowedByMe}>
                 @{connection.lensHandle}
               </Button>
             }

@@ -106,7 +106,8 @@ const Profile = ({ }) => {
       },
     }
   })
-  const lensProfile = data && data.profiles.items[0] || {}
+  const [lensProfile, setLensProfile] = useState({})
+  // const lensProfile = data && data.profiles.items[0] || {}
   const showFollowing = (router.query.following !== undefined)
   const showFollowers = (router.query.followers !== undefined)
   const showConnections = (showFollowers || showFollowing)
@@ -126,10 +127,16 @@ const Profile = ({ }) => {
   }, [setTalentProfile, username])
 
   useEffect(() => {
-    if (talentProfile.wallet_address) {
-      getProfiles()
+    const getData = async () => {
+      if (!lensProfile.handle && talentProfile.wallet_address) {
+        const res = await lensClient.profile.fetchAll({
+          ownedBy: [talentProfile.wallet_address]
+        })
+        setLensProfile(res.items[0])
+      }
     }
-  }, [getProfiles, talentProfile.wallet_address])
+    getData()
+  }, [getProfiles, lensProfile.handle,  talentProfile.wallet_address])
 
   const title = `${username} ✦ Talentlens`
 
@@ -189,11 +196,10 @@ const Profile = ({ }) => {
                     @{username}
                   </Button>
                   {lensProfile.handle && <Button
-                    title="View on LensFrens"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={`https://lensfrens.xyz/${lensProfile.handle}`}
-                  >
+                    type='lens'
+                    lensId={lensProfile.id}
+                    username={lensProfile.handle}
+                    isFollowedByMe={lensProfile.isFollowedByMe}>
                     @{lensProfile.handle}
                   </Button>}
                 </ButtonGroup>
