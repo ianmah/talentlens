@@ -145,6 +145,7 @@ const SignInWithLensButton = style(Button)`
 export const SignInWithLens = () => {
   const { address } = useAccount()
   const { lensClient } = useLensClient()
+  const { profile, setProfile } = useProfile()
   
   const auth = async (signature) => {
     await lensClient.authentication.authenticate(address, signature)

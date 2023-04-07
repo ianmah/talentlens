@@ -41,7 +41,6 @@ const Home = () => {
 
   useEffect(() => {
     if (isConnected) {
-      console.log('hi')
       const getProfile = async () => {
         try {
           const res = await axios.get(`${API_URL}/api/talent/${address.toLowerCase()}`, {})
@@ -54,6 +53,12 @@ const Home = () => {
       getProfile()
     }
   }, [address, isConnected, router, setProfile])
+
+  useEffect(() => {
+    if (profile.isAuthenticated && profile.username) {
+      router.push(`/profile/${profile.username}`)
+    }
+  }, [profile, router])
 
   return (
     <Container>
