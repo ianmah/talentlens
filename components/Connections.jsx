@@ -161,7 +161,7 @@ const Connections = ({ username, type, profileId, address }) => {
         <Profile key={connection.username || connection.lensHandle}>
           <ProfileImg size='50px' src={connection.profile_picture_url} />
           <UsernameContainer>
-            <b onClick={() => connection.username ? router.push(`/profile/${connection.username}`) : {}}>{connection.name}</b>
+            <b onClick={() => connection.username ? router.push(`/profile/${connection.username}`) : {}}>{connection.name || connection.lensHandle || connection.username}</b>
             {connection.username &&
               <Button
               type='mini-talent'

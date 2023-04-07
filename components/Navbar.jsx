@@ -50,7 +50,7 @@ const Navbar = () => {
 
     return <Container>
         {!isAuth && <SignInWithLens/>} 
-        <StyledProfileImg size='24px' src={profile.profile_picture_url} />
+        {/* <StyledProfileImg size='24px' src={profile.profile_picture_url} /> */}
     </Container>
 }
 

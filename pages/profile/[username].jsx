@@ -128,7 +128,7 @@ const Profile = ({ }) => {
 
   useEffect(() => {
     const getData = async () => {
-      if (!lensProfile.handle && talentProfile.wallet_address) {
+      if (talentProfile.wallet_address) {
         const res = await lensClient.profile.fetchAll({
           ownedBy: [talentProfile.wallet_address]
         })
@@ -136,7 +136,7 @@ const Profile = ({ }) => {
       }
     }
     getData()
-  }, [getProfiles, lensProfile.handle,  talentProfile.wallet_address])
+  }, [getProfiles, lensProfile.handle, talentProfile.wallet_address])
 
   const title = `${username} ✦ Talentlens`
 
