@@ -27,8 +27,8 @@ const Home = () => {
   const auth = async (signature) => {
     await lensClient.authentication.authenticate(address, signature)
     const isAuthenticated = await lensClient.authentication.isAuthenticated()
-    if (isAuthenticated && talentProfile) {
-      router.push(`/profile/${talentProfile}`)
+    if (isAuthenticated && profile.username) {
+      router.push(`/profile/${profile.username}`)
     }
   }
 
@@ -49,7 +49,8 @@ const Home = () => {
         } catch (e) {
           console.log('no talent profile found')
           setNotFound(true)
-        }}
+        }
+      }
       getProfile()
     }
   }, [address, isConnected, router, setProfile])
@@ -77,23 +78,23 @@ const Home = () => {
           {isConnected
             ? <>
               {notFound
-              ? <>
-                No Talent profile found. <a href="#" onClick={() => disconnect()}>Switch wallets</a> or&nbsp;
-                <a
-                  href="https://www.talentprotocol.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  create an account
-                </a>.</>
-              : <>
-                <SignInWithLens/>
-                <br/>
-                <br/>
-                <Button onClick={() => router.push(`/profile/${profile.username}`)}>
-                  Skip to Talent Profile
-                </Button>
-              </>}
+                ? <>
+                  No Talent profile found. <a href="#" onClick={() => disconnect()}>Switch wallets</a> or&nbsp;
+                  <a
+                    href="https://www.talentprotocol.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    create an account
+                  </a>.</>
+                : <>
+                  <SignInWithLens />
+                  <br />
+                  <br />
+                  <Button onClick={() => router.push(`/profile/${profile.username}`)}>
+                    Skip to Talent Profile
+                  </Button>
+                </>}
             </>
             : <p>Connect your wallet to get started --E</p>
           }
