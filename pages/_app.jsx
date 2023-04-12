@@ -18,7 +18,7 @@ const client = new ApolloClient({
 });
 
 const lensClient = new LensClient({
-  environment: mumbai,
+  environment: mainnet,
   storage: {
     getItem: (key) => {
       return window.localStorage.getItem(key);
