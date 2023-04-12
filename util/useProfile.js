@@ -7,10 +7,13 @@ export default function useProfile() {
 }
 
 export function ProfileProvider({ children }) {
-    const [profile, setProfile] = useState({})
+  const [profile, setProfile] = useState({})
+  const [toastText, setToastText] = useState('')
+  const [toastType, setToastType] = useState('')
+
   return (
     <Context.Provider
-        value={{profile, setProfile}} >
+        value={{profile, setProfile, toastText, setToastText, toastType, setToastType}} >
         {children}
     </Context.Provider>
   );

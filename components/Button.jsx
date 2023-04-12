@@ -63,10 +63,14 @@ const MiniFollowButton = style(FollowButton)`
   font-size: 12px;
 `
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...props }) => {
   const { lensClient } = useLensClient()
   const { address } = useAccount()
+  const { setToastType, setToastText } = useProfile()
 
   const auth = async (signature) => {
     await lensClient.authentication.authenticate(address, signature)
@@ -88,11 +92,26 @@ const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...p
     const isAuth = await lensClient.authentication.isAuthenticated()
 
     if (!isAuth) {
-      console.log('auething')
+      console.log('authing')
       await authenticate(signMessage, lensClient)
-    } else {      
-      await lensClient.proxyAction.freeFollow(lensId)
-      location.reload()
+    } else {
+      setToastType('loading')
+      setToastText('Following user...')
+      const res = await lensClient.proxyAction.freeFollow(lensId)
+      while (true) {
+        await sleep(500)
+        const status = await lensClient.proxyAction.checkStatus(res.value)
+        console.log(status)
+        if (status.value?.status === 'TRANSFERRING') {
+          setToastText('Indexing...')
+        }
+        if (status.value?.status === 'COMPLETE') {
+          setToastType('success')
+          setToastText('Success!')
+          break;
+        }
+      }
+      // location.reload()
     }
   }
 

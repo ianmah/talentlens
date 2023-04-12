@@ -18,6 +18,7 @@ import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
 import GET_PROFILES from '../../util/queries/getProfiles'
 import useLensClient from '../../util/useLensClient'
+import Toast from '../../components/Toast'
 
 const Spacer = style.pre`
   height: 3em;
@@ -300,6 +301,7 @@ const Profile = ({ }) => {
       </main>
 
       <Footer />
+      <Toast />
     </Container>
   );
 };
