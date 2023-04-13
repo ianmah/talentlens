@@ -71,8 +71,9 @@ const Connections = ({ username, type, profileId, address }) => {
       setConnections(res.data.length ? res.data : [])
       return;
     }
-    const following = await lensClient.profile.allFollowing({ address, cursor: { next: cursor} })
-    setCursor(following.pageInfo.next)
+    const following = await lensClient.profile.allFollowing({ address, cursor: { offset: cursor } })
+    setCursor(JSON.parse(following.pageInfo.next).offset)
+
     try {
       const res = await axios({
         method: 'POST',
@@ -98,8 +99,7 @@ const Connections = ({ username, type, profileId, address }) => {
       const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
 
       setConnections(data)
-      // const res = await axios.get(`${API_URL}/api/following/${username}?address=${address}`, { followers })
-      // setConnections(res.data.length ? res.data : [])
+      
     } catch (e) {
       console.log('error fetching', e)
     }
