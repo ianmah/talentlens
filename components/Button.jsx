@@ -67,10 +67,10 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...props }) => {
+const Button = ({ children, href, username, lensId, type, isFollowedByMe, ...props }) => {
   const { lensClient } = useLensClient()
   const { address } = useAccount()
-  const { setToastType, setToastText } = useProfile()
+  const { profile, setToastType, setToastText } = useProfile()
 
   const auth = async (signature) => {
     await lensClient.authentication.authenticate(address, signature)
@@ -116,22 +116,40 @@ const Button = ({ children, href, lensHandle, lensId, type, isFollowedByMe, ...p
   }
 
   if (type === 'mini-lens') {
+    if (isFollowedByMe) {
+      return <a target="_blank" rel="noreferrer" href={`https://lenster.xyz/u/${username}`}>
+        <MiniFollowButton
+          type='lens'>
+            <span>{children}</span>
+            <span className='follow'>Following</span>
+        </MiniFollowButton>
+      </a>
+    }
     return <MiniFollowButton
       type='lens'
-      onClick={() => { if (!isFollowedByMe) {handleFollow()}}}
+      onClick={() => handleFollow()}
       {...props}>
       <span>{children}</span>
-      {isFollowedByMe ? <span className='follow'>Following</span> : <span className='follow'>Follow</span>}
+      <span className='follow'>Follow</span>
     </MiniFollowButton>
   }
 
   if (type === 'lens') {
+    if (isFollowedByMe) {
+      return <a target="_blank" rel="noreferrer" href={`https://lenster.xyz/u/${username}`}>
+        <FollowButton
+          type='lens'>
+            <span>{children}</span>
+            <span className='follow'>Following</span>
+        </FollowButton>
+      </a>
+    }
     return <FollowButton
       type='lens'
-      onClick={() => { if (!isFollowedByMe) {handleFollow()}}}
+      onClick={() => handleFollow()}
       {...props}>
       <span>{children}</span>
-      {isFollowedByMe ? <span className='follow'>Following</span> : <span className='follow'>Follow</span>}
+      <span className='follow'>Follow</span>
     </FollowButton>
   }
 

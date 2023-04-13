@@ -11,18 +11,23 @@ import ProfileImg from './ProfileImg'
 import Button, { SignInWithLens } from '../components/Button'
 
 const Container = style.div`
-    height: 3em;
+    height: 1em;
     display: flex;
     align-items: center;
 `
 
 const StyledProfileImg = style(ProfileImg)`
+    position: absolute;
+    top: 1em;
+    right: 1em;
     margin-left: auto;
+    cursor: pointer;
 `
 
 const Navbar = () => {
     const { isConnected, address } = useAccount()
     const { lensClient } = useLensClient()
+    const router = useRouter()
     const { profile, setProfile } = useProfile()
     const [isAuth, setIsAuth] = useState(true)
 
@@ -49,8 +54,11 @@ const Navbar = () => {
     }, [profile, setProfile, address, isConnected])
 
     return <Container>
-        {!isAuth && <SignInWithLens/>} 
-        {/* <StyledProfileImg size='24px' src={profile.profile_picture_url} /> */}
+        {!isAuth && <SignInWithLens/>}
+        <StyledProfileImg
+        size='24px'
+        src={profile.profile_picture_url}
+        onClick={() => router.push(`/profile/${profile.username}`)}/>
     </Container>
 }
 
