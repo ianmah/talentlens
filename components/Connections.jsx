@@ -43,116 +43,132 @@ const UsernameContainer = style.div`
   }
 `
 
+const Center = style.div`
+  text-align: center;  
+`
+
+const LoadButton = style.a`
+  color: ${p=>p.theme.textSecondary};
+  cursor: pointer;
+`
+
 const Connections = ({ username, type, profileId, address }) => {
   const router = useRouter()
   const { lensClient } = useLensClient()
   const [connections, setConnections] = useState([])
+  const [cursor, setCursor] = useState(0)
 
-  useEffect(() => {
-    if (type === 'following') {
-      const getData = async () => {
-        if (!address) {
-          const res = await axios({
-            method: 'POST',
-            url: `${API_URL}/api/following/${username}`,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-          })
-          setConnections(res.data.length ? res.data : [])
-          return;
+  const getFollowing = async (cursor) => {
+    console.log(cursor)
+    if (!address) {
+      const res = await axios({
+        method: 'POST',
+        url: `${API_URL}/api/following/${username}`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      setConnections(res.data.length ? res.data : [])
+      return;
+    }
+    const following = await lensClient.profile.allFollowing({ address, cursor: { next: cursor} })
+    setCursor(following.pageInfo.next)
+    try {
+      const res = await axios({
+        method: 'POST',
+        url: `${API_URL}/api/following/${username}`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: following.items
+      })
+      const walletMap = res.data
+      const profiles = await lensClient.profile.fetchAll({ 
+        ownedBy: Object.keys(walletMap),
+      })
+      profiles.items.forEach(profile => {
+        walletMap[profile.ownedBy.toLowerCase()] = {
+          ...walletMap[profile.ownedBy.toLowerCase()],
+          lensHandle: profile.handle,
+          lensId: profile.id,
+          isFollowedByMe: profile.isFollowedByMe
         }
-        const following = await lensClient.profile.allFollowing({ address })
-        try {
-          const res = await axios({
-            method: 'POST',
-            url: `${API_URL}/api/following/${username}`,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            data: following.items
-          })
-          const walletMap = res.data
-          const profiles = await lensClient.profile.fetchAll({ 
-            ownedBy: Object.keys(walletMap),
-          })
-          profiles.items.forEach(profile => {
-            walletMap[profile.ownedBy.toLowerCase()] = {
-              ...walletMap[profile.ownedBy.toLowerCase()],
-              lensHandle: profile.handle,
-              lensId: profile.id,
-              isFollowedByMe: profile.isFollowedByMe
-            }
-          })
-          
-          const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
+      })
+      
+      const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
 
-          setConnections(data)
-          // const res = await axios.get(`${API_URL}/api/following/${username}?address=${address}`, { followers })
-          // setConnections(res.data.length ? res.data : [])
-        } catch (e) {
-          console.log('error fetching', e)
-        }
+      setConnections(data)
+      // const res = await axios.get(`${API_URL}/api/following/${username}?address=${address}`, { followers })
+      // setConnections(res.data.length ? res.data : [])
+    } catch (e) {
+      console.log('error fetching', e)
+    }
+  }
+
+  const getFollowers = async (cursor) => {
+    if (!profileId) {
+      try {
+        const res = await axios({
+          method: 'POST',
+          url: `${API_URL}/api/followers/${username}`,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        setConnections(res.data.length ? res.data : [])
+      } catch (e) {
+        console.log('error fetching', e)
       }
-      getData()
+      
+      return;
+    }
+    const followers = await lensClient.profile.allFollowers({ profileId, cursor: { offset: cursor } })
+    setCursor(JSON.parse(followers.pageInfo.next).offset)
+    
+    try {
+      const res = await axios({
+        method: 'POST',
+        url: `${API_URL}/api/followers/${username}`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: followers.items
+      })
+      const walletMap = res.data
+      const profiles = await lensClient.profile.fetchAll({ 
+        ownedBy: Object.keys(walletMap),
+      })
+
+      profiles.items.forEach(profile => {
+        walletMap[profile.ownedBy.toLowerCase()] = {
+          ...walletMap[profile.ownedBy.toLowerCase()],
+          lensHandle: profile.handle,
+          lensId: profile.id,
+          isFollowedByMe: profile.isFollowedByMe
+        }
+      })
+      
+      const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
+
+      setConnections(data)
+    } catch (e) {
+      console.log('error fetching', e)
+    }
+  }
+
+  const getData = (cursor) => {
+    if (type === 'following') {
+      getFollowing(cursor)
       return
     }
     if (type === 'followers') {
-      const getData = async () => {
-        if (!profileId) {
-          try {
-            const res = await axios({
-              method: 'POST',
-              url: `${API_URL}/api/followers/${username}`,
-              headers: {
-                'Content-Type': 'application/json'
-              },
-            })
-            setConnections(res.data.length ? res.data : [])
-          } catch (e) {
-            console.log('error fetching', e)
-          }
-          
-          return;
-        }
-        const followers = await lensClient.profile.allFollowers({ profileId })
-        // const followers = {
-        //   items: FOLLOWERS
-        // }
-        
-        try {
-          const res = await axios({
-            method: 'POST',
-            url: `${API_URL}/api/followers/${username}`,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            data: followers.items
-          })
-          const walletMap = res.data
-          const profiles = await lensClient.profile.fetchAll({ 
-            ownedBy: Object.keys(walletMap),
-          })
-
-          profiles.items.forEach(profile => {
-            walletMap[profile.ownedBy.toLowerCase()] = {
-              ...walletMap[profile.ownedBy.toLowerCase()],
-              lensHandle: profile.handle,
-              lensId: profile.id,
-              isFollowedByMe: profile.isFollowedByMe
-            }
-          })
-          
-          const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
-
-          setConnections(data)
-        } catch (e) {
-          console.log('error fetching', e)
-        }
-      }
-      getData()
+      getFollowers(cursor)
       return
     }
+  }
+
+  useEffect(() => {
+    getData()
   }, [type, username, profileId, address])
 
   return <>
@@ -182,6 +198,9 @@ const Connections = ({ username, type, profileId, address }) => {
         </Profile>
       )
     })}
+    <Center>
+      <LoadButton onClick={() => getData(cursor)}>Load More</LoadButton>
+    </Center>
   </>
 }
 
