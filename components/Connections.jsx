@@ -67,8 +67,12 @@ const Connections = ({ username, type, profileId, address }) => {
         headers: {
           'Content-Type': 'application/json'
         },
+        data: {
+          talCursor: talCursor.cursor,
+        }
       })
-      setConnections(res.data.length ? res.data : [])
+      setConnections(Object.values(res.data.profiles))
+      setTalCursor(res.data.cursor)
       return;
     }
     const following = await lensClient.profile.allFollowing({ address, cursor: { offset: cursor } })
@@ -109,6 +113,7 @@ const Connections = ({ username, type, profileId, address }) => {
   }
 
   const getFollowers = async (cursor) => {
+    console.log(talCursor)
     if (!profileId) {
       try {
         const res = await axios({
@@ -122,6 +127,7 @@ const Connections = ({ username, type, profileId, address }) => {
           }
         })
         setConnections(Object.values(res.data.profiles))
+        setTalCursor(res.data.cursor)
       } catch (e) {
         console.log('error fetching', e)
       }

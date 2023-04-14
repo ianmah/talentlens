@@ -67,7 +67,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const followers = await axios.get(`${TALENT_API}/subscribers?id=${handle}`, { headers })
+    const cursor = req.body.talCursor ? `&cursor=${req.body.talCursor}` : ''
+    const followers = await axios.get(`${TALENT_API}/subscribers?id=${handle}${cursor}`, { headers })
 
     const walletMap = {}
 
