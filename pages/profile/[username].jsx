@@ -133,7 +133,7 @@ const Profile = ({ }) => {
         const res = await lensClient.profile.fetchAll({
           ownedBy: [talentProfile.wallet_address]
         })
-        setLensProfile(res.items[0])
+        setLensProfile(res.items[0] || {})
       }
     }
     getData()

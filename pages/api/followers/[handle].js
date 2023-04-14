@@ -31,23 +31,23 @@ export default async function handler(req, res) {
   const handle = req.query.handle
   const lensWallets = {}
 
-  const lensFollowers = req.body
-  lensFollowers.forEach(connection => {
-    const profile_picture_url = connection.wallet.defaultProfile.picture?.original?.url
-                                  .replace('ipfs://', 'https://lens.infura-ipfs.io/ipfs/')
-                                  || 'https://beta.talentprotocol.com/packs/media/images/648f6f70811618825dc9.png'
-    lensWallets[connection.wallet.address.toLowerCase()] = {
-      lensHandle: connection.wallet.defaultProfile.handle,
-      lensId: connection.wallet.defaultProfile.id,
-      profile_picture_url,
-      name: connection.wallet.defaultProfile.name,
-      isFollowedByMe: connection.wallet.defaultProfile.isFollowedByMe,
-    }
-  })
-
-  // console.log(lensFollowers, lensWallets, Object.keys(lensWallets))
+  const lensFollowers = req.body.lensFollowers || []
 
   if (lensFollowers.length) {
+      
+    lensFollowers.forEach(connection => {
+      const profile_picture_url = connection.wallet.defaultProfile.picture?.original?.url
+                                    .replace('ipfs://', 'https://lens.infura-ipfs.io/ipfs/')
+                                    || 'https://beta.talentprotocol.com/packs/media/images/648f6f70811618825dc9.png'
+      lensWallets[connection.wallet.address.toLowerCase()] = {
+        lensHandle: connection.wallet.defaultProfile.handle,
+        lensId: connection.wallet.defaultProfile.id,
+        profile_picture_url,
+        name: connection.wallet.defaultProfile.name,
+        isFollowedByMe: connection.wallet.defaultProfile.isFollowedByMe,
+      }
+    })
+    
     const talentProfilesFromLensWallets = await axios({
       method: 'GET',
       url: `${TALENT_API}/talents`,
@@ -67,12 +67,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const mutualFollows = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=mutual_subscribe`, { headers })
-    const followers = await axios.get(`${TALENT_API}/connections?id=${handle}&connection_type=subscribing`, { headers })
+    const followers = await axios.get(`${TALENT_API}/subscribers?id=${handle}`, { headers })
 
     const walletMap = {}
 
-    const connections = [...mutualFollows.data.connections, ...followers.data.connections]
+    const connections = [...followers.data.subscribers]
 
     connections.forEach(connection => {
       if (!connection.wallet_address) {
@@ -81,47 +80,14 @@ export default async function handler(req, res) {
       walletMap[connection.wallet_address.toLowerCase()] = connection
     })
 
-    // const walletLensProfiles = await getLensProfiles(walletMap)
-
     const profiles = {...walletMap, ...lensWallets}
 
-    // console.log(profiles)
-
-    return res.status(200).json(profiles)
+    return res.status(200).json({profiles, cursor: followers.data.pagination})
   } catch (e) {
     console.log(e)
     return res.status(404).json({ message: "Not found" })
   }
 }
-
-// async function getLensFollowers(profileId) {
-//   if (!profileId) {
-//     console.log('No lens profile given')
-//     return {}
-//   }
-//   try {
-//     const res = await axios({
-//       method: 'POST',
-//       url: `https://api.lens.dev/`,
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       data: JSON.stringify({
-//         query: GET_FOLLOWERS.default,
-//         variables: {
-//           request: {
-//             profileId,
-//             limit: 50,
-//           },
-//         }
-//       })
-//     })
-//     return res.data.data.followers.items
-//   } catch (e) {
-//     console.log('Error getting Lens followers', e)
-//     return {}
-//   }
-// }
 
 async function getLensProfiles(walletMap) {
   if (!Object.keys(walletMap).length) {

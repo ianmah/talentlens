@@ -57,9 +57,9 @@ const Connections = ({ username, type, profileId, address }) => {
   const { lensClient } = useLensClient()
   const [connections, setConnections] = useState([])
   const [cursor, setCursor] = useState(0)
+  const [talCursor, setTalCursor] = useState({})
 
   const getFollowing = async (cursor) => {
-    console.log(cursor)
     if (!address) {
       const res = await axios({
         method: 'POST',
@@ -72,8 +72,7 @@ const Connections = ({ username, type, profileId, address }) => {
       return;
     }
     const following = await lensClient.profile.allFollowing({ address, cursor: { offset: cursor } })
-    setCursor(JSON.parse(following.pageInfo.next).offset)
-
+    setCursor(JSON.parse(following.pageInfo.next)?.offset)
     try {
       const res = await axios({
         method: 'POST',
@@ -81,9 +80,13 @@ const Connections = ({ username, type, profileId, address }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        data: following.items
+        data: {
+          lensFollowing: following.items,
+          talCursor: talCursor.cursor,
+        }
       })
-      const walletMap = res.data
+      const walletMap = res.data.profiles
+      setTalCursor(res.data.cursor)
       const profiles = await lensClient.profile.fetchAll({ 
         ownedBy: Object.keys(walletMap),
       })
@@ -114,14 +117,17 @@ const Connections = ({ username, type, profileId, address }) => {
           headers: {
             'Content-Type': 'application/json'
           },
+          data: {
+            talCursor: talCursor.cursor,
+          }
         })
-        setConnections(res.data.length ? res.data : [])
+        setConnections(Object.values(res.data.profiles))
       } catch (e) {
         console.log('error fetching', e)
       }
-      
       return;
     }
+    
     const followers = await lensClient.profile.allFollowers({ profileId, cursor: { offset: cursor } })
     setCursor(JSON.parse(followers.pageInfo.next).offset)
     
@@ -132,9 +138,14 @@ const Connections = ({ username, type, profileId, address }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        data: followers.items
+        data: {
+          lensFollowers: followers.items,
+          talCursor: talCursor.cursor,
+        }
       })
-      const walletMap = res.data
+      const walletMap = res.data.profiles
+      console.log(res.data.cursor)
+      setTalCursor(res.data.cursor)
       const profiles = await lensClient.profile.fetchAll({ 
         ownedBy: Object.keys(walletMap),
       })
@@ -170,7 +181,6 @@ const Connections = ({ username, type, profileId, address }) => {
   useEffect(() => {
     getData()
   }, [type, username, profileId, address])
-
   return <>
     {connections.map(connection => {
       return (
