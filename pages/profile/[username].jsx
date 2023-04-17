@@ -1,6 +1,5 @@
 import '@rainbow-me/rainbowkit/styles.css'
 import { useEffect, useState } from 'react'
-import { useLazyQuery, gql } from '@apollo/client'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import axios from 'axios'
 import { useAccount } from 'wagmi'
@@ -16,7 +15,6 @@ import Connections from '../../components/Connections'
 import Navbar from '../../components/Navbar'
 import ProfileImg from '../../components/ProfileImg'
 import { API_URL } from '../../util/api'
-import GET_PROFILES from '../../util/queries/getProfiles'
 import useLensClient from '../../util/useLensClient'
 import Toast from '../../components/Toast'
 
@@ -99,14 +97,7 @@ const Profile = ({ }) => {
   const { username } = router.query
   const [talentProfile, setTalentProfile] = useState({})
   const [notFound, setNotFound] = useState(false)
-  const [getProfiles, { loading, error, data }] = useLazyQuery(gql`${GET_PROFILES}`, {
-    variables: {
-      request: {
-        ownedBy: [talentProfile.wallet_address],
-        limit: 1,
-      },
-    }
-  })
+  const [lensPopulated, setLensPopulated] = useState(false)
   const [lensProfile, setLensProfile] = useState({})
   // const lensProfile = data && data.profiles.items[0] || {}
   const showFollowing = (router.query.following !== undefined)
@@ -134,10 +125,11 @@ const Profile = ({ }) => {
           ownedBy: [talentProfile.wallet_address]
         })
         setLensProfile(res.items[0] || {})
+        setLensPopulated(true)
       }
     }
     getData()
-  }, [getProfiles, lensProfile.handle, talentProfile.wallet_address])
+  }, [lensProfile.handle, talentProfile.wallet_address])
 
   const title = `${username} ✦ Talentlens`
 
@@ -291,8 +283,8 @@ const Profile = ({ }) => {
                 username={username}
                 profileId={lensProfile.id}
                 address={talentProfile.wallet_address}
-                type={showFollowers ? `followers` : `following`
-                }
+                type={showFollowers ? `followers` : `following`}
+                lensPopulated={lensPopulated}
               />
             }
           </>

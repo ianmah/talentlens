@@ -9,7 +9,10 @@ import ProfileImg from './ProfileImg'
 import Button from './Button'
 
 
-function sortConnections (x, y) {
+function sortConnections (obj1, obj2) {
+  const x = obj1[1]
+  const y = obj2[1]
+
   if (x.lensHandle && x.username) {
     return -1;
   }
@@ -52,12 +55,30 @@ const LoadButton = style.a`
   cursor: pointer;
 `
 
-const Connections = ({ username, type, profileId, address }) => {
+const Connections = ({ username, type, profileId, address, lensPopulated }) => {
   const router = useRouter()
   const { lensClient } = useLensClient()
   const [connections, setConnections] = useState([])
   const [cursor, setCursor] = useState(0)
   const [talCursor, setTalCursor] = useState({})
+  const [dedup, setDedup] = useState({})
+  const [showLoadMore, setShowLoadMore] = useState(true)
+
+  const addConnections = (walletToProfile) => {
+    const newConnections = []
+    const newDedup = []
+    walletToProfile.forEach(([address, profile]) => {
+      if (!dedup[address]) {
+        newConnections.push(profile)
+        newDedup[address] = true
+      } 
+    })
+    setDedup({...newDedup, ...dedup})
+    setConnections([...connections, ...newConnections])
+    if(!newConnections.length) {
+      setShowLoadMore(false)
+    }
+  }
 
   const getFollowing = async (cursor) => {
     if (!address) {
@@ -71,7 +92,9 @@ const Connections = ({ username, type, profileId, address }) => {
           talCursor: talCursor.cursor,
         }
       })
-      setConnections(Object.values(res.data.profiles))
+      if (Object.values(res.data.profiles).length) {
+        addConnections(res.data.profiles)
+      }
       setTalCursor(res.data.cursor)
       return;
     }
@@ -103,17 +126,14 @@ const Connections = ({ username, type, profileId, address }) => {
         }
       })
       
-      const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
-
-      setConnections(data)
-      
+      const data = Object.entries(walletMap).sort((x, y) => sortConnections(x, y))
+      addConnections(data)
     } catch (e) {
       console.log('error fetching', e)
     }
   }
 
   const getFollowers = async (cursor) => {
-    console.log(talCursor)
     if (!profileId) {
       try {
         const res = await axios({
@@ -126,7 +146,9 @@ const Connections = ({ username, type, profileId, address }) => {
             talCursor: talCursor.cursor,
           }
         })
-        setConnections(Object.values(res.data.profiles))
+        if (Object.values(res.data.profiles).length) {
+          addConnections(res.data.profiles)
+        }
         setTalCursor(res.data.cursor)
       } catch (e) {
         console.log('error fetching', e)
@@ -136,7 +158,6 @@ const Connections = ({ username, type, profileId, address }) => {
     
     const followers = await lensClient.profile.allFollowers({ profileId, cursor: { offset: cursor } })
     setCursor(JSON.parse(followers.pageInfo.next).offset)
-    
     try {
       const res = await axios({
         method: 'POST',
@@ -150,7 +171,6 @@ const Connections = ({ username, type, profileId, address }) => {
         }
       })
       const walletMap = res.data.profiles
-      console.log(res.data.cursor)
       setTalCursor(res.data.cursor)
       const profiles = await lensClient.profile.fetchAll({ 
         ownedBy: Object.keys(walletMap),
@@ -165,15 +185,17 @@ const Connections = ({ username, type, profileId, address }) => {
         }
       })
       
-      const data = Object.values(walletMap).sort((x, y) => sortConnections(x, y))
-
-      setConnections(data)
+      const data = Object.entries(walletMap).sort((x, y) => sortConnections(x, y))
+      addConnections(data)
     } catch (e) {
       console.log('error fetching', e)
     }
   }
 
   const getData = (cursor) => {
+    if (!lensPopulated) {
+      return;
+    }
     if (type === 'following') {
       getFollowing(cursor)
       return
@@ -187,6 +209,9 @@ const Connections = ({ username, type, profileId, address }) => {
   useEffect(() => {
     getData()
   }, [type, username, profileId, address])
+  useEffect(() => {
+    setConnections([])
+  }, [type])
   return <>
     {connections.map(connection => {
       return (
@@ -214,9 +239,9 @@ const Connections = ({ username, type, profileId, address }) => {
         </Profile>
       )
     })}
-    <Center>
+    {showLoadMore && <Center>
       <LoadButton onClick={() => getData(cursor)}>Load More</LoadButton>
-    </Center>
+    </Center>}
   </>
 }
 
